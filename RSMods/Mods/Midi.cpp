@@ -314,8 +314,10 @@ namespace Midi {
 
 			// Send MIDI Message
 			message.push_back(controlChangeStatus + channel); // Say it's a Control Change + channel#
-			message.push_back(bank); // Bank to change
+			// send backwards
 			message.push_back(toePosition); // New Control Value || 0 = off, 127 = on
+			message.push_back(bank); // Bank to change
+
 			midiout->sendMessage(&message);
 			std::cout << "Sending Midi Message: CC" << (int)channel << ": " << (int)bank << " " << (int)toePosition << std::endl;
 		}
@@ -362,7 +364,7 @@ namespace Midi {
 			if (TrueTuning_Hertz < 260) // Give some leeway for A220 and it's true tuned offsets
 				highestTuning -= 12;
 
-			selectedPedal.autoTuneFunction(highestTuning + tuningOffset, TrueTuning_Hertz);
+			selectedPedal.autoTuneFunction(lowestTuning + tuningOffset, TrueTuning_Hertz); //7string workarond
 			std::cout << "(MIDI) Triggered Mod: Automated Tuning (Song)" << std::endl;
 		}
 	}
@@ -395,7 +397,7 @@ namespace Midi {
 
 			// highestLowestTuning accounts for true tuning of A220. Do not add a check for it here.
 
-			selectedPedal.autoTuneFunction(highestTuning + tuningOffset, TrueTuning_Hertz);
+			selectedPedal.autoTuneFunction(lowestTuning + tuningOffset, TrueTuning_Hertz); // 7string workaround
 			std::cout << "(MIDI) Triggered Mod: Automated Tuning (Tuner)" << std::endl;
 			alreadyAutomatedTuningInThisSong = true;
 		}

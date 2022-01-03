@@ -51,7 +51,7 @@ byte* MemHelpers::GetCurrentTuning(bool verbose) {
 /// </summary>
 /// <returns>Guess of Current Tuning</returns>
 Tuning MemHelpers::GetTuningAtTuner() {
-	std::string pathToTuningList = "RSMods/CustomMods/tuning.database.json";
+	std::string pathToTuningList = "dlc/inlays/tuning.database.json";
 
 	if (!std::filesystem::exists(pathToTuningList)) { // If we can't find the list of tunings, just return a default value
 		std::cout << "Invalid File: GetTuningAtTuner - Path To Tuning File Doesn't Exist." << std::endl;
