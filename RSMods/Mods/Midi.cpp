@@ -369,6 +369,39 @@ namespace Midi {
 		}
 	}
 
+	void AutomateTuningOnPreset() {
+		if (alreadyAutomatedTuningInThisSong) {
+
+			if (!selectedPedal.supportsDropTuning) {
+				std::cout << "Your pedal doesn't support drop tuning." << std::endl;
+				return;
+			}
+
+			Sleep(200); //  We need to wait. This does seem to lag the game.
+
+			int* highestLowestTuning = MemHelpers::GetHighestLowestString();
+
+			int highestTuning = highestLowestTuning[0];
+			int lowestTuning = highestLowestTuning[1];
+
+			// Invalid pointer check
+			if (highestTuning == 666 && lowestTuning == 666) {
+				std::cout << "(MIDI) Unable to read tuning in song." << std::endl;
+				return;
+			}
+
+			delete[] highestLowestTuning;
+
+			int TrueTuning_Hertz = MemHelpers::GetTrueTuning();
+
+			if (TrueTuning_Hertz < 260) // Give some leeway for A220 and it's true tuned offsets
+				highestTuning -= 12;
+
+			selectedPedal.autoTuneFunction(lowestTuning + tuningOffset, TrueTuning_Hertz); //7string workarond
+			std::cout << "(MIDI) Triggered Mod: Automated Tuning on Preset (Song)" << std::endl;
+		}
+	}
+
 	void AttemptTuningInTuner() {
 		if (!alreadyAttemptedTuningInTuner) {
 			alreadyAttemptedTuningInTuner = true;

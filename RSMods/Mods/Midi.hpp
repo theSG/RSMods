@@ -16,6 +16,7 @@
 namespace Midi {
 	void InitMidi();
 	void AutomateTuning();
+	void AutomateTuningOnPreset();
 	void AttemptTuningInTuner();
 	void RevertAutomatedTuning();
 	void SendDataToThread_PC(char program, bool shouldWeSendPC = true);

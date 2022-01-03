@@ -286,6 +286,28 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				std::cout << "Triggered Mod: Toggle Extended Range" << std::endl;
 			}
 
+			// send some midi on keypress
+
+			else if (keyPressed == VK_OEM_COMMA)
+			{
+			Midi::SendProgramChange(1, 0);
+			
+			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
+			std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+			}
+			else if (keyPressed == VK_OEM_PERIOD)
+			{
+			Midi::SendProgramChange(2, 0);
+			
+			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
+			std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+			}
+			else if (keyPressed == VK_OEM_2)
+			{
+			Midi::SendProgramChange(3, 0);
+			std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
+			}
+
 			if (Settings::ReturnSettingValue("AutoTuneForSongWhen") == "manual" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, tuningMenus) && keyPressed == VK_DELETE) {
 				Midi::userWantsToUseAutoTuning = true;
 			}
