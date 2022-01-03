@@ -12,7 +12,6 @@
 #include "D3D/D3D.hpp"
 #include "D3D/D3DHooks.hpp"
 #include "WwiseHijack.hpp"
-#include "CC/ControlServer.hpp"
 
 // Windows Libraries
 #include <process.h>

@@ -15,20 +15,8 @@
     <Filter Include="D3D">
       <UniqueIdentifier>{210476c1-0572-493c-a9ca-1205a492f02b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CrowdControl">
-      <UniqueIdentifier>{0c9e34c2-578e-44ce-ad2d-1db8c0ddffee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CrowdControl\Effects">
-      <UniqueIdentifier>{640d2f3f-cd69-4671-b21b-d2a19d59ba27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CrowdControl\Effects\EffectHeaders">
-      <UniqueIdentifier>{09c7c9a6-45da-49ba-a53a-9972ed0015c1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Mods\Headers">
       <UniqueIdentifier>{a0fe11eb-0e53-49d5-bc06-c579ccb460fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CrowdControl\Headers">
-      <UniqueIdentifier>{6e837f50-05eb-4590-bdce-71840b2f60a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Libs">
       <UniqueIdentifier>{6987efde-b923-4637-af53-2105f5971db0}</UniqueIdentifier>
@@ -114,36 +102,6 @@
     <ClCompile Include="D3D/D3D.cpp">
       <Filter>D3D</Filter>
     </ClCompile>
-    <ClCompile Include="CC\CCStructs.cpp">
-      <Filter>CrowdControl</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\ControlServer.cpp">
-      <Filter>CrowdControl</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\TransparentNotesEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\RemoveNotesEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\SolidNotesEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\DrunkModeEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\FYourFCEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\ChangeToToneSlot.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\KillGuitarVolumeEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\KillMusicVolumeEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
     <ClCompile Include="WwiseHijack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -156,38 +114,11 @@
     <ClCompile Include="Mods\DisableControllers.cpp">
       <Filter>Mods</Filter>
     </ClCompile>
-    <ClCompile Include="CC\Effects\ShuffleTonesEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\SmallNoteheadEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\BigNoteheadEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\InvertedStringsEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
     <ClCompile Include="Mods\ExtendedRangeMode.cpp">
       <Filter>Mods</Filter>
     </ClCompile>
-    <ClCompile Include="CC\CCEffectList.cpp">
-      <Filter>CrowdControl</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\RemoveInstrumentEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
     <ClCompile Include="D3D/D3DHooks.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\TurboSpeedEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\CCEnums.hpp">
-      <Filter>CrowdControl\Headers</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\CCStructs.hpp">
-      <Filter>CrowdControl\Headers</Filter>
     </ClCompile>
     <ClCompile Include="Mods\Midi.cpp">
       <Filter>Mods</Filter>
@@ -198,23 +129,11 @@
     <ClCompile Include="Mods\VolumeControl.cpp">
       <Filter>Mods</Filter>
     </ClCompile>
-    <ClCompile Include="CC\Effects\RainbowNotesEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\RainbowStringsEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
     <ClCompile Include="Mods\LaunchOnExternalMonitor.cpp">
       <Filter>Mods</Filter>
     </ClCompile>
     <ClCompile Include="Mods\VoiceOverControl.cpp">
       <Filter>Mods</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\HighwayScrollSpeedEffect.cpp">
-      <Filter>CrowdControl\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="CC\Effects\ZoomEffect.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Lib\ImGUI\imgui_tables.cpp">
       <Filter>Main Headers\ImGUI</Filter>
@@ -329,50 +248,8 @@
     <ClInclude Include="ObjectUtil.hpp">
       <Filter>Main Headers</Filter>
     </ClInclude>
-    <ClInclude Include="CC\Effects\BigNoteheadEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\ChangeToToneSlot.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\DrunkModeEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\FYourFCEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\InvertedStringsEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\KillGuitarVolumeEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\KillMusicVolumeEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\RemoveNotesEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\ShuffleTonesEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\SmallNoteheadEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\SolidNotesEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectUtil.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\TransparentNotesEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\RemoveInstrumentEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\TurboSpeedEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Mods\CollectColors.hpp">
       <Filter>Mods\Headers</Filter>
@@ -395,15 +272,6 @@
     <ClInclude Include="Mods\DisableControllers.hpp">
       <Filter>Mods\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="CC\CCEffect.hpp">
-      <Filter>CrowdControl\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\CCEffectList.hpp">
-      <Filter>CrowdControl\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\ControlServer.hpp">
-      <Filter>CrowdControl\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Mods\Midi.hpp">
       <Filter>Mods\Headers</Filter>
     </ClInclude>
@@ -413,20 +281,11 @@
     <ClInclude Include="Mods\VolumeControl.hpp">
       <Filter>Mods\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="CC\Effects\RainbowNotesEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\RainbowStringsEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="Mods\LaunchOnExternalMonitor.hpp">
       <Filter>Mods\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Mods\VoiceOverControl.hpp">
       <Filter>Mods\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CC\Effects\HighwayScrollSpeedEffect.hpp">
-      <Filter>CrowdControl\Effects\EffectHeaders</Filter>
     </ClInclude>
     <ClInclude Include="CC\Effects\ZoomEffect.hpp">
       <Filter>Main Headers</Filter>
@@ -453,9 +312,6 @@
     </None>
     <None Include="Lib\Detours\detours.pdb">
       <Filter>Main Headers\Detours</Filter>
-    </None>
-    <None Include="CC/rocksmithcrowdcontrol.cs">
-      <Filter>CrowdControl</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

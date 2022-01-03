@@ -327,8 +327,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				}
 			else if (Contains(currMsg, "enable"))
 				effectQueue.push_back(currMsg);
-			else if (Contains(currMsg, "Reconnect"))
-				CrowdControl::StartServerLoop();
+
 		}
 	}
 
@@ -1242,8 +1241,6 @@ void Initialize() {
 	std::thread(MidiThread).detach(); // MIDI Auto Tuning / True Tuning
 	std::thread(RiffRepeaterThread).detach(); // RR Speed Above 100% Log
 
-	// Probably check ini setting before starting this thing
-	CrowdControl::StartServer(); // Twitch Effects Server
 }
 
 /// <summary>
