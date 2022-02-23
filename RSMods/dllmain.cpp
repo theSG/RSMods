@@ -310,13 +310,13 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			Midi::SendProgramChange(3, 0);
 			
 			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
-			std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 			}
 			else if (keyPressed == VK_NUMPAD0)
 			{
 			Midi::SendProgramChange(4, 0);
 
-			std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
+			//std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
 			}
 			else if (keyPressed == VK_DECIMAL)
 			{
