@@ -86,7 +86,16 @@ namespace Offsets {
 
 	// Timer
 	extern uintptr_t ptr_timer;
-	extern std::vector<unsigned int> ptr_timerOffsets;
+	extern std::vector<unsigned int> ptr_timerBaseOffsets;
+	extern uintptr_t ptr_timerRare;
+	extern std::vector<unsigned int> ptr_timerRareOffsets;
+
+
+	// Grey Out Note Timer
+	extern uintptr_t ptr_greyOutNoteTimer;
+	extern std::vector<unsigned int> ptr_greyOutNoteTimerOffsets;
+
+
 
 	// Song Speed (Riff Repeater Speed! Not Scroll Speed)
 	extern uintptr_t ptr_previewName;

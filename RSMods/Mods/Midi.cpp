@@ -364,7 +364,7 @@ namespace Midi {
 			if (TrueTuning_Hertz < 260) // Give some leeway for A220 and it's true tuned offsets
 				highestTuning -= 12;
 
-			selectedPedal.autoTuneFunction(lowestTuning + tuningOffset, TrueTuning_Hertz); //7string workarond
+			selectedPedal.autoTuneFunction(lowestTuning + tuningOffset, TrueTuning_Hertz); //7string workaround
 			std::cout << "(MIDI) Triggered Mod: Automated Tuning (Song)" << std::endl;
 		}
 	}
@@ -377,7 +377,7 @@ namespace Midi {
 				return;
 			}
 
-			Sleep(200); //  We need to wait. This does seem to lag the game.
+			Sleep(200); //  We need to wait for plugin. This does seem to lag the game.
 
 			int* highestLowestTuning = MemHelpers::GetHighestLowestString();
 
@@ -397,7 +397,7 @@ namespace Midi {
 			if (TrueTuning_Hertz < 260) // Give some leeway for A220 and it's true tuned offsets
 				highestTuning -= 12;
 
-			selectedPedal.autoTuneFunction(lowestTuning + tuningOffset, TrueTuning_Hertz); //7string workarond
+			selectedPedal.autoTuneFunction(lowestTuning + tuningOffset, TrueTuning_Hertz); //7string workaround
 			std::cout << "(MIDI) Triggered Mod: Automated Tuning on Preset (Song)" << std::endl;
 		}
 	}

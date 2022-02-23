@@ -26,7 +26,7 @@ byte MemHelpers::getLowestStringTuning() {
 /// <param name="verbose"> - Should we show the tuning in the console **DEBUG BUILD ONLY**</param>
 /// <returns>Current Tuning in a Byte[6] array.</returns>
 byte* MemHelpers::GetCurrentTuning(bool verbose) {
-	uintptr_t addrTuning = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_tuning, Offsets::ptr_tuningOffsets);
+	uintptr_t addrTuning = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_tuning, Offsets::ptr_tuningOffsets, true);
 
 	// Null Pointer Check
 	if (!addrTuning) {
@@ -124,10 +124,10 @@ Tuning MemHelpers::GetTuningAtTuner() {
 
 /// <returns>Should we Display The Extended Range Colors?</returns>
 bool MemHelpers::IsExtendedRangeSong() {
-	uintptr_t addrTimer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timer, Offsets::ptr_timerOffsets);
+	uintptr_t addrTimerEnabled = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timer, Offsets::ptr_timerBaseOffsets);
 
 	// Null Pointer Check
-	if (!addrTimer) {
+	if (!addrTimerEnabled) {
 		std::cout << "Invalid Pointer: IsExtendedRangeSong" << std::endl;
 		return false;
 	}
@@ -456,15 +456,30 @@ void MemHelpers::ToggleLoft() {
 }
 
 float MemHelpers::SongTimer() {
-	uintptr_t addrTimer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timer, Offsets::ptr_timerOffsets);
+	uintptr_t addrTimerBase = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timer, Offsets::ptr_timerBaseOffsets);
+	uintptr_t addrTimerRare = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timerRare, Offsets::ptr_timerRareOffsets);
 
 	// Null Pointer Check
-	if (!addrTimer) {
-		std::cout << "Invalid Pointer: ShowSongTimer" << std::endl;
+	if (!addrTimerBase) {
+		std::cout << "Invalid Pointer: (BASE) ShowSongTimer" << std::endl;
 		return 0.f;
 	}
-
-	return *(float*)addrTimer;
+	// Null Pointer Check
+	// At this point, we can verify that the timer is a valid time.
+	if (!addrTimerRare) {
+		std::cout << "Invalid Pointer: (RARE) ShowSongTimer" << std::endl;
+		return *(float*)addrTimerBase;
+	}
+	// We entered a song where the base timer does not work.
+	// Cause for this is unknown but we need to check, or time based mods (looping, song timer) will break.
+	// Ex: Desolate Motion, or Rocksmith 2012 Theme.
+	if (IsInStringArray(GetCurrentMenu(), songModes) && *(float*)addrTimerBase == 0.f && *(float*)addrTimerRare != 0.f) {
+		return *(float*)addrTimerRare;
+	}
+	// This is the default case, and will be used 99.99% of the time.
+	else {
+		return *(float*)addrTimerBase;
+	}
 }
 
 /// <summary>
@@ -472,7 +487,7 @@ float MemHelpers::SongTimer() {
 /// </summary>
 /// <param name="enabled"> - Should we turn on colors or turn off?</param>
 void MemHelpers::ToggleCB(bool enabled) {
-	uintptr_t addrTimer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timer, Offsets::ptr_timerOffsets);
+	uintptr_t addrTimer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timer, Offsets::ptr_timerBaseOffsets);
 	uintptr_t cbEnabled = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_colorBlindMode, Offsets::ptr_colorBlindModeOffsets);
 
 	// Null Pointers Check
@@ -638,4 +653,34 @@ std::string MemHelpers::GetSongKey() {
 		}
 	}
 	return lastSongKey;
+}
+
+/// <summary>
+/// When the user passes a note in the pause menu, notes become grey. This gets the time at which notes go from being grey (deactivated) to being colored (activated).
+/// </summary>
+/// <returns>Time where all notes before it are grey / deactivated.</returns>
+float MemHelpers::GetGreyNoteTimer() {
+	uintptr_t greyNoteTimer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_greyOutNoteTimer, Offsets::ptr_greyOutNoteTimerOffsets);
+
+	if (!greyNoteTimer) {
+		std::cout << "greyNoteTimer = NULL" << std::endl;
+		return NULL;
+	}
+
+	return *(float*)greyNoteTimer;
+}
+
+/// <summary>
+/// Sets the time at which all notes before it turn grey (deactivated) and all notes after it are colorful (activated)
+/// </summary>
+/// <param name="timeInSeconds"> - Time to set the "deactivate before" at.</param>
+void MemHelpers::SetGreyNoteTimer(float timeInSeconds) {
+	uintptr_t greyNoteTimer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_greyOutNoteTimer, Offsets::ptr_greyOutNoteTimerOffsets);
+
+	if (!greyNoteTimer) {
+		std::cout << "greyNoteTimer = NULL" << std::endl;
+		return;
+	}
+
+	*(float*)greyNoteTimer = timeInSeconds;
 }

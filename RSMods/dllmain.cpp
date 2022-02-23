@@ -65,17 +65,14 @@ unsigned WINAPI RiffRepeaterThread() {
 	while (!D3DHooks::GameClosing) {
 		Sleep(100);
 
-		const auto songKey = MemHelpers::GetSongKey();
-		if (songKey != previousSongKey) {
-			previousSongKey = songKey;
+		if (MemHelpers::GetSongKey() != previousSongKey) {
+			RiffRepeater::readyToLogSongID = false;
+			previousSongKey = MemHelpers::GetSongKey();
 
 			if (RiffRepeater::SongObjectIDs.find("Play_" + previousSongKey) != RiffRepeater::SongObjectIDs.end()) {
 				RiffRepeater::currentSongID = RiffRepeater::SongObjectIDs.find("Play_" + previousSongKey)->second;
-				RiffRepeater::readyToLogSongID = false;
-				RiffRepeater::loggedCurrentSongID = true; // Song key has already been logged
 			}
 			else {
-				RiffRepeater::loggedCurrentSongID = false;
 				RiffRepeater::readyToLogSongID = true; // Wait until the user gets into the song so we can grab this ID.
 			}
 		}
@@ -296,20 +293,95 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			Midi::SendProgramChange(1, 0);
 			
 			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
-			std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 			}
 			else if (keyPressed == VK_OEM_PERIOD)
 			{
 			Midi::SendProgramChange(2, 0);
 			
 			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
-			std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 			}
 			else if (keyPressed == VK_OEM_2)
 			{
 			Midi::SendProgramChange(3, 0);
+			
+			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
+			std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+			}
+			else if (keyPressed == VK_NUMPAD0)
+			{
+			Midi::SendProgramChange(4, 0);
+
 			std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
 			}
+			else if (keyPressed == VK_DECIMAL)
+			{
+			Midi::SendProgramChange(5, 0);
+			
+			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
+			std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+			}
+			
+			// Rewind song by X seconds mod. Z key 5sec-restart
+			else if (keyPressed == 0x5A && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
+			// SongTimer is stored in seconds, while RewindBy is stored in milliseconds.
+			// We need milliseconds to send to Wwise, so change SongTimer to milliseconds, then subtract the Rewind value.
+
+			AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) - 5000);
+			if (GetKeyState(VK_SHIFT) & 0x8000) seekTo = 0;
+			// RewindBy is greater than the amount of time we've been in the song.
+			// Reset seekTo to 0 to prevent seeking to a negative time.
+			if (seekTo < 0) {
+			//	std::cout << "(REWIND) Tried to seek to " << seekTo << "ms into the song. Resetting to 0." << std::endl;
+				seekTo = 0;
+			}
+
+			// Send event to Wwise to rewind the song.
+			// Or more accurately, move to the seek time since Wwise doesn't have a rewind function.
+			WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
+
+			// Tell Rocksmith to make all notes before the section we want the user to play to be greyed out.
+			// While this isn't absolutely necessary, it is best to have this run just in case.
+			// Our seek time needs to be stored as milliseconds when sending to Wwise, but we need to have it in seconds when setting the GreyNoteTimer.
+			MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
+
+			//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
+			}
+			// X key 10-20sec
+			else if (keyPressed == 0x58 && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
+				
+			AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 10000);
+			if (GetKeyState(VK_SHIFT) & 0x8000) seekTo += 10000;
+
+			//if (seekTo < 0) {
+			//	std::cout << "(REWIND) Tried to seek to " << seekTo << "ms into the song. Resetting to 0." << std::endl;
+			//	seekTo = 0;
+
+			WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
+
+			MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
+
+			//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
+			}
+			// C key 30 sec - 1 min
+			else if (keyPressed == 0x43 && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
+
+			AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 30000);
+			if (GetKeyState(VK_SHIFT) & 0x8000) seekTo += 30000;
+			//if (seekTo < 0) {
+			//	std::cout << "(REWIND) Tried to seek to " << seekTo << "ms into the song. Resetting to 0." << std::endl;
+			//	seekTo = 0;
+
+			WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
+
+			MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
+
+			//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
+			}
+
+
+
 
 			if (Settings::ReturnSettingValue("AutoTuneForSongWhen") == "manual" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, tuningMenus) && keyPressed == VK_DELETE) {
 				Midi::userWantsToUseAutoTuning = true;
@@ -1052,10 +1124,6 @@ unsigned WINAPI MainThread() {
 						RiffRepeater::readyToLogSongID = false;
 				}
 
-				// Enable riff repeater time stretching
-				if (Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on")
-					RiffRepeater::EnableTimeStretch();
-
 				// Remove Headstock (In Song)
 				if (Settings::ReturnSettingValue("RemoveHeadstockEnabled") == "on" && Settings::ReturnSettingValue("RemoveHeadstockWhen") == "song")
 					RemoveHeadstockInThisMenu = true;
@@ -1121,6 +1189,8 @@ unsigned WINAPI MainThread() {
 				// Turn off Riff Repeater Speed above 100%
 				if (!MemHelpers::IsInStringArray(currentMenu, scoreScreens) && RiffRepeater::currentlyEnabled_Above100) {
 					RiffRepeater::DisableTimeStretch();
+					RiffRepeater::loggedCurrentSongID = false;
+					realSongSpeed = 100.f;
 				}
 
 				// Turn off Extended Range
