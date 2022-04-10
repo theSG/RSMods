@@ -80,11 +80,11 @@ unsigned WINAPI RiffRepeaterThread() {
 			}
 		}
 		
-		if (Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, fastRRModes) && saveNewRRSpeedToFile) {
+		/*if (Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, fastRRModes) && saveNewRRSpeedToFile) {
 			std::ofstream rrText = std::ofstream("riff_repeater_speed.txt", std::ofstream::out);
 			rrText << std::to_string((int)realSongSpeed) << std::endl;
 			saveNewRRSpeedToFile = false;
-		}
+		}*/
 	}
 
 	return 0;
@@ -119,7 +119,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				std::cout << "Triggered Mod: Toggle Loft" << std::endl;
 			}
 
-			else if (keyPressed == Settings::GetKeyBind("ShowSongTimerKey") && Settings::ReturnSettingValue("ShowSongTimerEnabled") == "on") { // Show Song Timer
+			else if (keyPressed == Settings::GetKeyBind("ShowSongTimerKey") && MemHelpers::IsInSong()) { // Show Song Timer
 				D3DHooks::showSongTimerOnScreen = !D3DHooks::showSongTimerOnScreen;
 				std::cout << "Triggered Mod: Show Song Timer" << std::endl;
 			}
@@ -151,18 +151,13 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				Settings::UpdateSettings();
 				std::cout << "Triggered Setting Update" << std::endl;
 			}
-			else if (keyPressed == Settings::GetKeyBind("MasterVolumeKey") && Settings::ReturnSettingValue("VolumeControlEnabled") == "on") { // Master Volume
-				if ((GetKeyState(VK_CONTROL) & 0x8000)) // Is Control Pressed
-					VolumeControl::DecreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Master_Volume");
-				else
-					VolumeControl::IncreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Master_Volume");
+			else if (keyPressed == Settings::GetKeyBind("MasterVolumeKey") && MemHelpers::IsInSong()) { // up Volume
+				VolumeControl::IncreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
 			}
-			else if (keyPressed == Settings::GetKeyBind("SongVolumeKey") && Settings::ReturnSettingValue("VolumeControlEnabled") == "on") { // Song Volume
-				if ((GetKeyState(VK_CONTROL) & 0x8000)) // Is Control Pressed
-					VolumeControl::DecreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
-				else
-					VolumeControl::IncreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
+			else if (keyPressed == Settings::GetKeyBind("SongVolumeKey") && MemHelpers::IsInSong()) { // down Volume
+				VolumeControl::DecreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
 			}
+			/*
 			else if (keyPressed == Settings::GetKeyBind("Player1VolumeKey") && Settings::ReturnSettingValue("VolumeControlEnabled") == "on") { // P1 Guitar & Bass Volume
 				if ((GetKeyState(VK_CONTROL) & 0x8000)) // Is Control Pressed
 					VolumeControl::DecreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Player1");
@@ -193,6 +188,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				else
 					VolumeControl::IncreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_SFX");
 			}
+			*/
 
 			else if (keyPressed == Settings::GetKeyBind("TuningOffsetKey") && Settings::ReturnSettingValue("AutoTuneForSong") == "on") { // Change Tuning Offset In Game
 				if (GetKeyState(VK_SHIFT) & 0x8000)
@@ -278,9 +274,9 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				// Save new speed, and save it to a file (for streamers to use as an on-screen overlay)
 				RiffRepeater::SetSpeed(realSongSpeed, true);
 				RiffRepeater::EnableTimeStretch();
-				saveNewRRSpeedToFile = true;
+				saveNewRRSpeedToFile = false;
 
-				std::cout << "Triggered Mod: Riff Repeater Speed set to " << realSongSpeed << "% which is equivalent to " << RiffRepeater::ConvertSpeed(realSongSpeed) << " Wwise RTPC." << std::endl;
+				//std::cout << "Triggered Mod: Riff Repeater Speed set to " << realSongSpeed << "% which is equivalent to " << RiffRepeater::ConvertSpeed(realSongSpeed) << " Wwise RTPC." << std::endl;
 			}
 			else if (keyPressed == Settings::GetKeyBind("ToggleExtendedRangeKey"))
 			{
@@ -323,7 +319,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			Midi::SendProgramChange(5, 0);
 			
 			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
-			std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 			}
 			
 			// Rewind song by X seconds mod. Z key 5sec-restart
@@ -694,7 +690,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char(mixerInternalNames[currentVolumeIndex].c_str(), AK_INVALID_GAME_OBJECT, &volume, &type);
 
 			if (currentVolumeIndex != 0)
-				MemHelpers::DX9DrawText(drawMixerTextName[currentVolumeIndex] + std::to_string((int)volume) + "%", whiteText, (int)(WindowSize.width / 54.85), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 14.22), (int)(WindowSize.height / 8), pDevice);
+				MemHelpers::DX9DrawText(drawMixerTextName[currentVolumeIndex] + std::to_string((int)volume) + "%", whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
 		}
 
 		if ((D3DHooks::showSongTimerOnScreen && MemHelpers::SongTimer() != 0.f)) { // Show Song Timer
@@ -711,11 +707,11 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 			MemHelpers::DX9DrawText(std::to_string(hours) + "h:" + std::to_string(minutes) + "m:" + std::to_string(seconds) + "s", whiteText, (int)(WindowSize.width / 1.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 1.45), (int)(WindowSize.height / 8), pDevice);
 		}
 
-		if ((Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on" && RiffRepeater::loggedCurrentSongID && (MemHelpers::IsInStringArray(currentMenu, fastRRModes) || MemHelpers::IsInStringArray(currentMenu, scoreScreens))) || RiffRepeater::currentlyEnabled_Above100) { // Riff Repeater over 100%
-			realSongSpeed = RiffRepeater::GetSpeed(true); // While this should almost always be the same value, the user might enable riff repeater, which could cause this number to be wrong.
+		//if ((Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on" && RiffRepeater::loggedCurrentSongID && (MemHelpers::IsInStringArray(currentMenu, fastRRModes) || MemHelpers::IsInStringArray(currentMenu, scoreScreens))) || RiffRepeater::currentlyEnabled_Above100) { // Riff Repeater over 100%
+		//	realSongSpeed = RiffRepeater::GetSpeed(true); // While this should almost always be the same value, the user might enable riff repeater, which could cause this number to be wrong.
 
-			MemHelpers::DX9DrawText("Riff Repeater Speed: " + std::to_string((int)roundf(realSongSpeed)) + "%", whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
-		}
+		//	MemHelpers::DX9DrawText("Riff Repeater Speed: " + std::to_string((int)roundf(realSongSpeed)) + "%", whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+		//}
 
 		if (Settings::ReturnSettingValue("ShowCurrentNoteOnScreen") == "on" && GuitarSpeak::GetCurrentNoteName() != (std::string)"") { // Show Current Note On Screen
 			if (MemHelpers::IsInSong())

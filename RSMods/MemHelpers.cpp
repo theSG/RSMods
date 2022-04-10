@@ -457,17 +457,17 @@ void MemHelpers::ToggleLoft() {
 
 float MemHelpers::SongTimer() {
 	uintptr_t addrTimerBase = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timer, Offsets::ptr_timerBaseOffsets);
-	uintptr_t addrTimerRare = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timerRare, Offsets::ptr_timerRareOffsets);
+	uintptr_t addrTimerRare = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timerRare, Offsets::ptr_timerRareOffsets, true);
 
 	// Null Pointer Check
 	if (!addrTimerBase) {
-		std::cout << "Invalid Pointer: (BASE) ShowSongTimer" << std::endl;
+		//std::cout << "Invalid Pointer: (BASE) ShowSongTimer" << std::endl;
 		return 0.f;
 	}
 	// Null Pointer Check
 	// At this point, we can verify that the timer is a valid time.
 	if (!addrTimerRare) {
-		std::cout << "Invalid Pointer: (RARE) ShowSongTimer" << std::endl;
+		//std::cout << "Invalid Pointer: (RARE) ShowSongTimer" << std::endl;
 		return *(float*)addrTimerBase;
 	}
 	// We entered a song where the base timer does not work.

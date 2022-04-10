@@ -44,24 +44,24 @@ inline unsigned int currentVolumeIndex = 0; // Mixer volume to change. 0 - Disab
 
 inline std::vector<std::string> mixerInternalNames = { // Needs to be char* as that's what SetRTPCValue needs.
 		{""}, // Disabled (Don't show the user any values)
-		{"Master_Volume"}, // Master Volume
+//		{"Master_Volume"}, // Master Volume
 		{"Mixer_Music"}, // Song Volume
-		{"Mixer_Player1"}, // Player 1 Guitar & Bass (both are handled with this singular name)
-		{"Mixer_Player2"}, // Player 2 Guitar & Bass (both are handled with this singular name)
-		{"Mixer_Mic"}, // My Microphone Volume
-		{"Mixer_VO"}, // Rocksmith Dad Voice Over
-		{"Mixer_SFX"}, // Menu SFX Volume
+//		{"Mixer_Player1"}, // Player 1 Guitar & Bass (both are handled with this singular name)
+//		{"Mixer_Player2"}, // Player 2 Guitar & Bass (both are handled with this singular name)
+//		{"Mixer_Mic"}, // My Microphone Volume
+//		{"Mixer_VO"}, // Rocksmith Dad Voice Over
+//		{"Mixer_SFX"}, // Menu SFX Volume
 };
 
 inline std::vector<std::string> drawMixerTextName = {
 	{""},
-	{"Master Volume: "},
-	{"Song Volume: "},
-	{"Player 1 Volume: "},
-	{"Player 2 Volume: "},
-	{"Microphone Volume: "},
-	{"Voice-Over Volume: "},
-	{"SFX Volume: "},
+//	{"Master Volume: "},
+	{"Vol: "},
+//	{"Player 1 Volume: "},
+//	{"Player 2 Volume: "},
+//	{"Microphone Volume: "},
+//	{"Voice-Over Volume: "},
+//	{"SFX Volume: "},
 };
 
 inline std::string selectedUser = "";
