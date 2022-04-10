@@ -390,14 +390,15 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				Midi::userWantsToUseAutoTuning = true;
 			}
 		}
-
+		/*
 		if (debug) {
 			if (keyPressed == VK_INSERT) // Debug menu | ImGUI
 				D3DHooks::menuEnabled = !D3DHooks::menuEnabled;
 
 		}
+		*/
 	}
-
+	/*
 	// Update settings from GUI. Done on GUI open AND on GUI setting save.
 	else if (msg == WM_COPYDATA) {
 		COPYDATASTRUCT* pcds = (COPYDATASTRUCT*)lParam;
@@ -435,9 +436,12 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 	//if (D3DHooks::menuEnabled && (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP || msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP || msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP || msg == WM_MOUSEWHEEL || msg == WM_MOUSEMOVE))
 	//	return false;
 
+	*/
+
 	// If Game is closing, else get ImGUI setup.
 	if (msg == WM_CLOSE)
 		D3DHooks::GameClosing = true;
+	/*
 	else {
 		ImGuiIO& io = ImGui::GetIO();
 
@@ -450,7 +454,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 		if (D3DHooks::menuEnabled && ImGui_ImplWin32_WndProcHandler(hWnd, msg, keyPressed, lParam))
 			return true;
 	}
-
+	*/
 	return CallWindowProc(D3DHooks::oWndProc, hWnd, msg, keyPressed, lParam);
 }
 
@@ -471,11 +475,12 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 	// Has this been ran before (AKA run only once, at startup)
 	if (!init) {
 		init = true;
-
+		/*
 		// Create ImGUI
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		ImFont* font = io.Fonts->AddFontFromMemoryCompressedTTF(RobotoFont_data, RobotoFont_size, 20);
+		*/
 
 		// Hook WndProc (Keypress manager)
 		D3DDEVICE_CREATION_PARAMETERS d3dcp;
@@ -483,12 +488,15 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		hThisWnd = d3dcp.hFocusWindow;
 		oWndProc = (WNDPROC)SetWindowLongPtr(hThisWnd, GWLP_WNDPROC, (LONG_PTR)WndProc);
 
+		/*
 		// Init ImGUI
 		ImGui_ImplWin32_Init(hThisWnd);
 		ImGui_ImplDX9_Init(pDevice);
 		ImGui::GetIO().ImeWindowHandle = hThisWnd;
 		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+		*/
 
 		// **DEPRECATED** Generate solid color textures. Useful for testing
 		//D3D::GenerateSolidTexture(pDevice, &Red, D3DCOLOR_ARGB(255, 000, 255, 255));
@@ -518,7 +526,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		D3DXCreateTextureFromFile(pDevice, L"stage5.png", &customGreenScreenWall_Stage5); // Pipes and wall trim
 		D3DXCreateTextureFromFile(pDevice, L"stage6.png", &customGreenScreenWall_Stage6); // N Mask of Background tile
 	}
-
+	/*
 	// Start new ImGUI Frame
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -560,7 +568,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		if (ImGui::Button("Send CC MIDI Message"))
 			Midi::SendDataToThread_CC(Midi::MidiCC);
 
-		/* STRING COLOR TESTING
+		 STRING COLOR TESTING
 
 		static bool CB = false;
 		static std::string previewValue = "Select a string";
@@ -596,7 +604,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		if (ImGui::Button("Restore default colors"))
 			ERMode::ResetString(selectedString);
 
-		*/
+		
 
 		ImGui::End();
 
@@ -667,7 +675,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 	// Restart mouse and keyboard in game
 	ImGui::CaptureKeyboardFromApp(false);
 	ImGui::CaptureMouseFromApp(false);
-
+	*/
 	if (generateTexture) {
 		D3D::GenerateTextures(pDevice, D3D::Strings);
 
@@ -1383,11 +1391,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, uint32_t dwReason, LPVOID lpReserved) {
 		return TRUE;
 	case DLL_PROCESS_DETACH:
 		Proxy::Shutdown(); // Kill Proxy to xinput1_3.dll
-
+		/*
 		// Shutdown ImGUI
 		ImGui_ImplWin32_Shutdown();
 		ImGui_ImplDX9_Shutdown();
 		ImGui::DestroyContext();
+		*/
 		return TRUE;
 	}
 	return TRUE;
