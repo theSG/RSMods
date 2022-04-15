@@ -381,7 +381,18 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 
 			else if (keyPressed == VK_F1)
 			{
-				if (MemHelpers::IsInSong()) TrueTuning::DisableTrueTuning();
+			TrueTuning::DisableTrueTuning(587.3295); //B
+			}
+			//TrueTuning::DisableTrueTuning(466.1638); //Eb
+			//TrueTuning::DisableTrueTuning(493.8833); //D
+			//TrueTuning::DisableTrueTuning(523.2511); //C#
+			//TrueTuning::DisableTrueTuning(554.3653); //C
+			//TrueTuning::DisableTrueTuning(587.3295); //B
+			//TrueTuning::DisableTrueTuning(622.2540); //A#
+			//TrueTuning::DisableTrueTuning(659.2551); //A
+			else if (keyPressed == VK_F4)
+			{
+			TrueTuning::EnableTrueTuning();
 			}
 
 
@@ -726,7 +737,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		if (Settings::ReturnSettingValue("AutoTuneForSong") == "on" && Settings::GetKeyBind("TuningOffsetKey") != NULL && MemHelpers::IsInStringArray(currentMenu, tuningMenus)) { // Show current tuning
 			MemHelpers::DX9DrawText("Auto Tune For: " + Midi::GetTuningOffsetName(Midi::tuningOffset), whiteText, (int)(WindowSize.width / 5.5), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 5.65), (int)(WindowSize.height / 8), pDevice);
 		}
-
+		/*
 		// Regenerate Twitch Solid Note Color for a new color
 		if (D3DHooks::regenerateUserDefinedTexture) {
 			Color userDefColor = Settings::ConvertHexToColor(Settings::ReturnSettingValue("SolidNoteColor"));
@@ -742,10 +753,11 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 
 			D3DHooks::regenerateUserDefinedTexture = false;
 		}
+		*/
 	}
 	return hRet;
 }
-
+/*
 /// <summary>
 /// Handle Twitch Toggle Message.
 /// </summary>
@@ -854,7 +866,7 @@ unsigned WINAPI HandleEffectQueueThread() {
 	}
 	return 0;
 }
-
+*/
 /// <summary>
 /// Hook Game Functions For Our Own Uses (On Alt-Tab, Draw UI, etc).
 /// </summary>
@@ -1346,7 +1358,7 @@ unsigned WINAPI MainThread() {
 void Initialize() {
 	std::thread(MainThread).detach(); // Mod Toggle based on menus
 	std::thread(EnumerationThread).detach(); // Force Enumeration
-	std::thread(HandleEffectQueueThread).detach(); // Twitch Effects
+//	std::thread(HandleEffectQueueThread).detach(); // Twitch Effects
 	std::thread(MidiThread).detach(); // MIDI Auto Tuning / True Tuning
 	std::thread(RiffRepeaterThread).detach(); // RR Speed Above 100% Log
 

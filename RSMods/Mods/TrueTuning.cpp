@@ -1,6 +1,6 @@
 #include "TrueTuning.hpp"
 
-const float ForcedTrueTuning = 587.3f;
+float ForcedTrueTuning;
 
 void __declspec(naked) disableTrueTuning()
 {
@@ -25,8 +25,9 @@ void __declspec(naked) disableTrueTuning()
 /// <summary>
 /// Disable true tuning by telling note detection that it should use A440 as the base-point.
 /// </summary>
-void TrueTuning::DisableTrueTuning()
+void TrueTuning::DisableTrueTuning(float newtuning)
 {
+	ForcedTrueTuning = newtuning;
 	*(char*)0x0149c5ee = 0xEB; // Force a jump into our code, JMP.
 	MemUtil::PlaceHook((void*)Offsets::ptr_disableTrueTuning, disableTrueTuning, 6);
 

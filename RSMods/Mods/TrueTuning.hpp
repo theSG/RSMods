@@ -7,6 +7,6 @@
 
 namespace TrueTuning
 {
-	void DisableTrueTuning();
+	void DisableTrueTuning(float newtuning);
 	void EnableTrueTuning();
 }
