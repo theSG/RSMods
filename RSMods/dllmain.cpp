@@ -379,7 +379,10 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
 			}
 
-
+			else if (keyPressed == VK_F1)
+			{
+				if (MemHelpers::IsInSong()) TrueTuning::DisableTrueTuning();
+			}
 
 
 			if (Settings::ReturnSettingValue("AutoTuneForSongWhen") == "manual" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, tuningMenus) && keyPressed == VK_DELETE) {
