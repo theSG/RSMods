@@ -433,6 +433,37 @@ namespace Midi {
 			selectedPedal.autoTuneFunction(lowestTuning + tuningOffset, TrueTuning_Hertz); // 7string workaround
 			std::cout << "(MIDI) Triggered Mod: Automated Tuning (Tuner)" << std::endl;
 			alreadyAutomatedTuningInThisSong = true;
+
+			//switch (MemHelpers::GetHighestLowestString(MemHelpers::GetTuningAtTuner())[1])
+			//{
+			//case 0:
+			//	TrueTuning::EnableTrueTuning();
+			//	break;
+			//case -1:
+			//	TrueTuning::DisableTrueTuning(466.1638); //Eb
+			//	break;
+			//case -2:
+			//	TrueTuning::DisableTrueTuning(493.8833); //D
+			//	break;
+			//case -3:
+			//	TrueTuning::DisableTrueTuning(523.2511); //C#
+			//	break;
+			//case -4:
+			//	TrueTuning::DisableTrueTuning(554.3653); //C
+			//	break;
+			//case -5:
+			//	TrueTuning::DisableTrueTuning(587.3295); //B
+			//	break;
+			//case -6:
+			//	TrueTuning::DisableTrueTuning(622.2540); //A#
+			//	break;
+			//case -7:
+			//	TrueTuning::DisableTrueTuning(659.2551); //A
+			//	break;
+			//default:
+			//	//TrueTuning::EnableTrueTuning();
+			//	break;
+			//}
 		}
 	}
 
@@ -464,6 +495,7 @@ namespace Midi {
 						SendControlChange(Midi::Software::trueTuningShutoffTrigger, Midi::Software::trueTuningBank, Midi::Software::sendTrueTuningChannel);
 				}
 
+				//TrueTuning::EnableTrueTuning();
 				Midi::Software::sentTrueTuningInThisSong = false;
 				alreadyAutomatedTuningInThisSong = false;
 				alreadyAutomatedTrueTuningInThisSong = false;
@@ -909,6 +941,8 @@ namespace Midi {
 
 			if (TrueTuning_Hertz < 260.f)
 				TrueTuning_Hertz *= 2;
+			if (TrueTuning_Hertz > 465.f)
+				TrueTuning_Hertz == 440;
 
 			if (TrueTuning_Hertz != 440)
 				AutoTrueTuning(TrueTuning_Hertz);
@@ -918,6 +952,8 @@ namespace Midi {
 
 			if (TrueTuning_Hertz < 260.f)
 				TrueTuning_Hertz *= 2;
+			if (TrueTuning_Hertz > 465.f)
+				TrueTuning_Hertz == 440;
 
 			if (trueTuningMap.find(TrueTuning_Hertz) != trueTuningMap.end()) {
 				if (sendTrueTuningCommand == programChangeStatus)

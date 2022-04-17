@@ -32,7 +32,7 @@ void TrueTuning::DisableTrueTuning(float newtuning)
 	MemUtil::PlaceHook((void*)Offsets::ptr_disableTrueTuning, disableTrueTuning, 6);
 
 	
-	std::cout << "Disabled true tuning" << std::endl;
+	std::cout << "!!! Changed to A" << ForcedTrueTuning << " true tuning" << std::endl;
 }
 
 /// <summary>
@@ -44,5 +44,5 @@ void TrueTuning::EnableTrueTuning()
 	MemUtil::PatchAdr((void*)Offsets::ptr_disableTrueTuning, "\xD9\x05\x50\x19\x22\x01", 6);
 
 	
-	std::cout << "Enabled true tuning" << std::endl;
+	std::cout << "!!! Restored true tuning" << std::endl;
 }

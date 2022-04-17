@@ -65,6 +65,31 @@ inline std::vector<std::string> drawMixerTextName = {
 //	{"SFX Volume: "},
 };
 
+// True Tuning Override Values
+inline unsigned int currentTrueTuningIndex = 0; //
+
+inline std::vector<float> tuningInternalValue = {
+		{440.0000}, //E Standard
+		{466.1638}, //Eb Standard
+		{493.8833}, //D Standard
+		{523.2511}, //C# Standard
+		{554.3653}, //C Standard
+		{587.3295}, //B Standard
+		{622.2540}, //A# Standard
+		{659.2551}, //A Standard
+};
+
+inline std::vector<std::string> drawTuningName = {
+		{"E Standard"}, // (440.0000); //E
+		{"Eb Standard"}, // (466.1638); //Eb
+		{"D Standard"}, // (493.8833); //D
+		{"C# Standard"}, // (523.2511); //C#
+		{"C Standard"}, // (554.3653); //C
+		{"B Standard"}, // (587.3295); //B
+		{"A# Standard"}, // (622.2540); //A#
+		{"A Standard"}, // (659.2551); //A
+};
+
 inline std::string selectedUser = "";
 
 bool Contains(std::string str, const char* key){ return str.find(key) != std::string::npos; }

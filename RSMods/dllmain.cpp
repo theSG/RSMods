@@ -225,6 +225,18 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				if (currentVolumeIndex > (mixerInternalNames.size() - 1)) // There are only so many values we know we can edit.
 					currentVolumeIndex = 0;
 			}
+			
+			else if (keyPressed == VK_ADD && MemHelpers::GetCurrentMenu() == "LearnASong_SongOptions") { // Show True Tuning
+			currentTrueTuningIndex++;
+			
+			if (currentTrueTuningIndex > (drawTuningName.size() - 1))
+				currentTrueTuningIndex = 0;
+
+			float newTuning = tuningInternalValue[currentTrueTuningIndex];
+			if (newTuning != 440.f)
+				TrueTuning::DisableTrueTuning(newTuning);
+			else TrueTuning::EnableTrueTuning();
+			}
 
 			//else if (keyPressed == VK_F9) // Controller Killswitch | Current State: Kills XInput Controllers (Xbox), but won't kill DirectInput (else)
 			//	DisableControllers::DisableControllers();
@@ -707,6 +719,12 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 				MemHelpers::DX9DrawText(drawMixerTextName[currentVolumeIndex] + std::to_string((int)volume) + "%", whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
 		}
 
+		// if Settings::ReturnSettingValue("TrueTuningEnabled") == "on" &&
+		if (MemHelpers::GetCurrentMenu() == "LearnASong_SongOptions") {  // Show TrueTuning
+			if (currentTrueTuningIndex != 0)
+				MemHelpers::DX9DrawText(drawTuningName[currentTrueTuningIndex], whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)WindowSize.width, (int)WindowSize.height, pDevice);
+		}
+
 		if ((D3DHooks::showSongTimerOnScreen && MemHelpers::SongTimer() != 0.f)) { // Show Song Timer
 			std::string currentSongTimeString = std::to_string(MemHelpers::SongTimer());
 			size_t stringSize;
@@ -726,6 +744,8 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 
 		//	MemHelpers::DX9DrawText("Riff Repeater Speed: " + std::to_string((int)roundf(realSongSpeed)) + "%", whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 		//}
+
+		//MemHelpers::DX9DrawText(MemHelpers::GetCurrentMenu(), whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 
 		if (Settings::ReturnSettingValue("ShowCurrentNoteOnScreen") == "on" && GuitarSpeak::GetCurrentNoteName() != (std::string)"") { // Show Current Note On Screen
 			if (MemHelpers::IsInSong())

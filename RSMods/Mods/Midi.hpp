@@ -12,6 +12,7 @@
 #include "../Structs.hpp"
 #include "../WwiseHijack.hpp"
 #include "RiffRepeater.hpp"
+#include "TrueTuning.hpp"
 
 namespace Midi {
 	void InitMidi();
