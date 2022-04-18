@@ -57,7 +57,7 @@ inline std::vector<std::string> mixerInternalNames = { // Needs to be char* as t
 inline std::vector<std::string> drawMixerTextName = {
 	{""},
 //	{"Master Volume: "},
-	{"Vol: "},
+	{"Song Volume: "},
 //	{"Player 1 Volume: "},
 //	{"Player 2 Volume: "},
 //	{"Microphone Volume: "},

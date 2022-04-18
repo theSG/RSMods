@@ -390,23 +390,24 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 
 			//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
 			}
-
+			/*
 			else if (keyPressed == VK_F1)
 			{
-			TrueTuning::DisableTrueTuning(587.3295); //B
+			MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
+			DWORD oldProtect;
+			VirtualProtect((LPVOID)Offsets::ptr_scrollSpeedMultiplier, 8, PAGE_READWRITE, &oldProtect);
+			Offsets::ref_scrollSpeedMultiplier = 2.5;
+			VirtualProtect((LPVOID)Offsets::ptr_scrollSpeedMultiplier, 8, oldProtect, &oldProtect);
 			}
-			//TrueTuning::DisableTrueTuning(466.1638); //Eb
-			//TrueTuning::DisableTrueTuning(493.8833); //D
-			//TrueTuning::DisableTrueTuning(523.2511); //C#
-			//TrueTuning::DisableTrueTuning(554.3653); //C
-			//TrueTuning::DisableTrueTuning(587.3295); //B
-			//TrueTuning::DisableTrueTuning(622.2540); //A#
-			//TrueTuning::DisableTrueTuning(659.2551); //A
-			else if (keyPressed == VK_F4)
+			else if (keyPressed == VK_F2)
 			{
-			TrueTuning::EnableTrueTuning();
+			MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
+			DWORD oldProtect;
+			VirtualProtect((LPVOID)Offsets::ptr_scrollSpeedMultiplier, 8, PAGE_READWRITE, &oldProtect);
+			Offsets::ref_scrollSpeedMultiplier = 8.5;
+			VirtualProtect((LPVOID)Offsets::ptr_scrollSpeedMultiplier, 8, oldProtect, &oldProtect);
 			}
-
+			*/
 
 			if (Settings::ReturnSettingValue("AutoTuneForSongWhen") == "manual" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, tuningMenus) && keyPressed == VK_DELETE) {
 				Midi::userWantsToUseAutoTuning = true;
@@ -710,13 +711,16 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 	// Draw text on screen || NOTE: NEVER USE SET VALUES. Always do division of WindowSize X AND Y so every resolution should have the text in around the same spot.
 	if (D3DHooks::GameLoaded) {
 
-		if (Settings::ReturnSettingValue("VolumeControlEnabled") == "on" && (MemHelpers::IsInSong() || AutomatedSelectedVolume)) { // Show Selected Volume
+		if (Settings::ReturnSettingValue("VolumeControlEnabled") == "on" && (MemHelpers::IsInSong() || AutomatedSelectedVolume)) { // Show Stuff
 			float volume = 0;
 			RTPCValue_type type = RTPCValue_GameObject;
 			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char(mixerInternalNames[currentVolumeIndex].c_str(), AK_INVALID_GAME_OBJECT, &volume, &type);
 
-			if (currentVolumeIndex != 0)
-				MemHelpers::DX9DrawText(drawMixerTextName[currentVolumeIndex] + std::to_string((int)volume) + "%", whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
+			if (currentVolumeIndex != 0) {
+				MemHelpers::DX9DrawText("Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
+				realSongSpeed = RiffRepeater::GetSpeed(true);
+				MemHelpers::DX9DrawText(">>>: " + std::to_string((int)roundf(realSongSpeed)), whiteText, (int)(WindowSize.width / 1.2), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+			}
 		}
 
 		// if Settings::ReturnSettingValue("TrueTuningEnabled") == "on" &&
