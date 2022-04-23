@@ -18,6 +18,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <chrono>
 
 // Mods
 #include "Mods/Enumeration.hpp"
@@ -91,5 +92,6 @@ inline std::vector<std::string> drawTuningName = {
 };
 
 inline std::string selectedUser = "";
-
+bool changePresetTuning = false;
+auto changePresetTime = std::chrono::steady_clock::time_point();
 bool Contains(std::string str, const char* key){ return str.find(key) != std::string::npos; }

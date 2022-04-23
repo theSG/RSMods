@@ -36,6 +36,11 @@ unsigned WINAPI EnumerationThread() {
 	return 0;
 }
 
+//void ChangePresetTuning() {
+//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+//	Midi::AutomateTuningOnPreset();
+//}
+
 /// <summary>
 /// Send Midi Data Async
 /// </summary>
@@ -314,22 +319,31 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			else if (keyPressed == VK_OEM_COMMA)
 			{
 			Midi::SendProgramChange(1, 0);
-			
-			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
+
+			if (MemHelpers::IsInSong()) {
+				changePresetTime = std::chrono::steady_clock::now();
+				changePresetTuning = true;
+			}
 			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 			}
 			else if (keyPressed == VK_OEM_PERIOD)
 			{
 			Midi::SendProgramChange(2, 0);
 			
-			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
+			if (MemHelpers::IsInSong()) {
+				changePresetTime = std::chrono::steady_clock::now();
+				changePresetTuning = true;
+			}
 			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 			}
 			else if (keyPressed == VK_OEM_2)
 			{
 			Midi::SendProgramChange(3, 0);
 			
-			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
+			if (MemHelpers::IsInSong()) {
+				changePresetTime = std::chrono::steady_clock::now();
+				changePresetTuning = true;
+			}
 			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 			}
 			else if (keyPressed == VK_NUMPAD0)
@@ -342,7 +356,10 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			{
 			Midi::SendProgramChange(5, 0);
 			
-			if (MemHelpers::IsInSong()) Midi::AutomateTuningOnPreset();
+			if (MemHelpers::IsInSong()) {
+				changePresetTime = std::chrono::steady_clock::now();
+				changePresetTuning = true;
+			}
 			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 			}
 			
@@ -1234,6 +1251,14 @@ unsigned WINAPI MainThread() {
 					UseEROrColorsInThisSong = (Settings::ReturnSettingValue("ExtendedRangeEnabled") == "on" && UseERExclusivelyInThisSong || Settings::GetModSetting("CustomStringColors") == 2 || (Settings::ReturnSettingValue("SeparateNoteColors") == "on" && Settings::GetModSetting("SeparateNoteColorsMode") != 1));
 					AttemptedERInThisSong = true;
 				}
+
+				if (changePresetTuning) {
+					const auto currentTime = std::chrono::steady_clock::now();
+					if (currentTime - changePresetTime > std::chrono::milliseconds(200)) {
+						changePresetTuning = false;
+						Midi::AutomateTuningOnPreset();
+					}
+				}
 			}
 
 			/// If User Is Exiting A Song / In A Menu
@@ -1403,7 +1428,7 @@ void Initialize() {
 //	std::thread(HandleEffectQueueThread).detach(); // Twitch Effects
 	std::thread(MidiThread).detach(); // MIDI Auto Tuning / True Tuning
 	std::thread(RiffRepeaterThread).detach(); // RR Speed Above 100% Log
-
+//	std::thread(ChangePresetTuning).detach();
 }
 
 /// <summary>

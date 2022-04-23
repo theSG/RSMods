@@ -377,8 +377,6 @@ namespace Midi {
 				return;
 			}
 
-			Sleep(200); //  We need to wait for plugin. This does seem to lag the game.
-
 			int* highestLowestTuning = MemHelpers::GetHighestLowestString();
 
 			int highestTuning = highestLowestTuning[0];
