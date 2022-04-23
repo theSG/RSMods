@@ -28,9 +28,11 @@ namespace MemHelpers {
 	bool IsSongInDrop(Tuning tuning);
 	bool IsSongInStandard(Tuning tuning);
 	int GetTrueTuning();
+	int GetNoteHits();
+	int GetNoteMiss();
 	Resolution GetWindowSize();
 	bool IsInStringArray(std::string stringToCheckIfInsideArray, std::vector<std::string> stringVector = std::vector<std::string>());
-	void DX9DrawText(std::string textToDraw, int textColorHex, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, LPDIRECT3DDEVICE9 pDevice, Resolution setFontSize = { NULL, NULL });
+	void DX9DrawText(std::string textToDraw, int textColorHex, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, LPDIRECT3DDEVICE9 pDevice, Resolution setFontSize = { NULL, NULL }, DWORD format = DT_LEFT | DT_NOCLIP);
 	void ToggleDrunkMode(bool enable);
 	bool IsInSong();
 	Tuning GetTuningAtTuner();

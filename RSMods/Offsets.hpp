@@ -121,6 +121,8 @@ namespace Offsets {
 
 	// Twitch Mods
 	extern uintptr_t ptr_currentNoteStreak;
+	extern std::vector<unsigned int> ptr_notesHitOffsets;
+	extern std::vector<unsigned int> ptr_notesMissOffsets;
 	extern std::vector<unsigned int> ptr_currentNoteStreakLASOffsets;
 	extern std::vector<unsigned int> ptr_currentNoteStreakSAOffsets;
 

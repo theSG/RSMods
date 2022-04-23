@@ -399,6 +399,19 @@ int MemHelpers::GetTrueTuning() {
 	return trueTuning;
 }
 
+int MemHelpers::GetNoteHits() {
+	uintptr_t notesHitPointer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_currentNoteStreak, Offsets::ptr_notesHitOffsets, true);
+	if (!notesHitPointer) return 0;
+	if (IsInStringArray(GetCurrentMenu(), learnASongModes)) return *(int*)notesHitPointer;
+	else return 0;
+}
+
+int MemHelpers::GetNoteMiss() {
+	uintptr_t notesMissPointer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_currentNoteStreak, Offsets::ptr_notesMissOffsets, true);
+	if (!notesMissPointer) return 0;
+	if (IsInStringArray(GetCurrentMenu(), learnASongModes)) return *(int*)notesMissPointer;
+	else return 0;
+}
 
 /// <param name="GameNotLoaded"> - Should we trust the pointer?</param>
 /// <returns>Internal Menu Name</returns>
@@ -541,7 +554,7 @@ bool MemHelpers::IsInStringArray(std::string stringToCheckIfInsideArray, std::ve
 /// <param name="bottomRightY"> - BOTTOM right of textbox</param>
 /// <param name="pDevice"> - Device Pointer</param>
 /// <param name="setFontSize"> - Override font size</param>
-void MemHelpers::DX9DrawText(std::string textToDraw, int textColorHex, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, LPDIRECT3DDEVICE9 pDevice, Resolution setFontSize)
+void MemHelpers::DX9DrawText(std::string textToDraw, int textColorHex, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, LPDIRECT3DDEVICE9 pDevice, Resolution setFontSize, DWORD format)
 {
 	Resolution WindowSize = MemHelpers::GetWindowSize();
 
@@ -563,7 +576,7 @@ void MemHelpers::DX9DrawText(std::string textToDraw, int textColorHex, int topLe
 
 	// Preload And Draw The Text (Supposed to reduce the performance hit (It's D3D/DX9 but still good practice))
 	DX9FontEncapsulation->PreloadTextA(textToDraw.c_str(), textToDraw.length());
-	DX9FontEncapsulation->DrawTextA(NULL, textToDraw.c_str(), -1, &TextRectangle, DT_LEFT | DT_NOCLIP, textColorHex);
+	DX9FontEncapsulation->DrawTextA(NULL, textToDraw.c_str(), -1, &TextRectangle, format, textColorHex);
 
 	// Let's clean up our junk, since fonts don't do it automatically.
 	if (DX9FontEncapsulation) {

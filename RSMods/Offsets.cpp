@@ -126,6 +126,8 @@ namespace Offsets {
 
 	// Twitch Mods
 	uintptr_t ptr_currentNoteStreak = 0x00F5C5AC;
+	std::vector<unsigned int> ptr_notesHitOffsets{ 0xB0, 0x18, 0x4, 0x84, 0x30 };
+	std::vector<unsigned int> ptr_notesMissOffsets{ 0xB0, 0x18, 0x4, 0x84, 0x40 };
 	std::vector<unsigned int> ptr_currentNoteStreakLASOffsets{ 0xB0, 0x18, 0x4, 0x84, 0x34 };
 	std::vector<unsigned int> ptr_currentNoteStreakSAOffsets{ 0xB0, 0x18, 0x4, 0x4C, 0x3C };
 

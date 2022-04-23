@@ -238,6 +238,18 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			else TrueTuning::EnableTrueTuning();
 			}
 
+			else if (keyPressed == VK_SUBTRACT && MemHelpers::GetCurrentMenu() == "LearnASong_SongOptions") { // Show True Tuning
+
+				if (currentTrueTuningIndex == 0)
+					currentTrueTuningIndex = (drawTuningName.size() - 1);
+				else currentTrueTuningIndex--;
+
+				float newTuning = tuningInternalValue[currentTrueTuningIndex];
+				if (newTuning != 440.f)
+					TrueTuning::DisableTrueTuning(newTuning);
+				else TrueTuning::EnableTrueTuning();
+			}
+
 			//else if (keyPressed == VK_F9) // Controller Killswitch | Current State: Kills XInput Controllers (Xbox), but won't kill DirectInput (else)
 			//	DisableControllers::DisableControllers();
 
@@ -720,6 +732,12 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 				MemHelpers::DX9DrawText("Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
 				realSongSpeed = RiffRepeater::GetSpeed(true);
 				MemHelpers::DX9DrawText(">>>: " + std::to_string((int)roundf(realSongSpeed)), whiteText, (int)(WindowSize.width / 1.2), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+				int notesHit = MemHelpers::GetNoteHits();
+				if (notesHit > 0)
+					MemHelpers::DX9DrawText("Hit: " + std::to_string((int)notesHit), whiteText,
+						(int)(WindowSize.width / 1.5), (int)(WindowSize.height / 1.049),
+						(int)(WindowSize.width / 1.225), (int)(WindowSize.height),
+						pDevice, { NULL, NULL }, DT_RIGHT | DT_NOCLIP);
 			}
 		}
 
