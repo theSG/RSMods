@@ -134,6 +134,13 @@ inline std::vector<std::string> scoreScreens = { // Screens for us to take score
 	"H2H_SongReview",
 };
 
+inline std::vector<std::string> skipScreens = { // Screens to skip
+	"LearnASong_SongReview",
+	"SelectionListDialog",
+	"Duet_SongReview",
+	"H2H_SongReview",
+};
+
 inline std::vector<std::string> onlineModes = {
 	"ScoreAttack_Game",
 	"Guitarcade_Game",

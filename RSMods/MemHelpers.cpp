@@ -400,17 +400,15 @@ int MemHelpers::GetTrueTuning() {
 }
 
 int MemHelpers::GetNoteHits() {
-	uintptr_t notesHitPointer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_currentNoteStreak, Offsets::ptr_notesHitOffsets, true);
+	uintptr_t notesHitPointer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_currentNoteStreak, Offsets::ptr_notesHitOffsets);
 	if (!notesHitPointer) return 0;
-	if (IsInStringArray(GetCurrentMenu(), learnASongModes)) return *(int*)notesHitPointer;
-	else return 0;
+	else return *(int*)notesHitPointer;
 }
 
 int MemHelpers::GetNoteMiss() {
-	uintptr_t notesMissPointer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_currentNoteStreak, Offsets::ptr_notesMissOffsets, true);
+	uintptr_t notesMissPointer = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_currentNoteStreak, Offsets::ptr_notesMissOffsets);
 	if (!notesMissPointer) return 0;
-	if (IsInStringArray(GetCurrentMenu(), learnASongModes)) return *(int*)notesMissPointer;
-	else return 0;
+		else return *(int*)notesMissPointer;
 }
 
 /// <param name="GameNotLoaded"> - Should we trust the pointer?</param>

@@ -37,7 +37,7 @@ unsigned WINAPI EnumerationThread() {
 }
 
 void ChangePresetTuning() {
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	std::this_thread::sleep_for(std::chrono::milliseconds(150)); //Waiting for prest to change
 	Midi::AutomateTuningOnPreset();
 }
 
@@ -741,11 +741,13 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 				realSongSpeed = RiffRepeater::GetSpeed(true);
 				MemHelpers::DX9DrawText(">>>: " + std::to_string((int)roundf(realSongSpeed)), whiteText, (int)(WindowSize.width / 1.2), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 				int notesHit = MemHelpers::GetNoteHits();
-				if (notesHit > 0)
-					MemHelpers::DX9DrawText("Hit: " + std::to_string((int)notesHit), whiteText,
+				int notesMiss = MemHelpers::GetNoteMiss();
+				if (notesHit > 0 ) //don't draw in disconected //&& MemHelpers::IsInStringArray(MemHelpers::GetCurrentMenu(), learnASongModes)
+					MemHelpers::DX9DrawText(std::to_string((float)notesHit / (notesHit + notesMiss) * 100).erase(5,3) + "%", whiteText,
 						(int)(WindowSize.width / 1.5), (int)(WindowSize.height / 1.049),
 						(int)(WindowSize.width / 1.225), (int)(WindowSize.height),
 						pDevice, { NULL, NULL }, DT_RIGHT | DT_NOCLIP);
+				
 			}
 		}
 
@@ -1350,6 +1352,9 @@ unsigned WINAPI MainThread() {
 				TakeScreenshot();
 			else
 				takenScreenshotOfThisScreen = false;
+
+			if (Settings::ReturnSettingValue("SkipSelection") == "on" && MemHelpers::IsInStringArray(currentMenu, skipScreens))
+				AutoEnterGame();
 
 			// If the current menu is not the same as the previous menu and if it's one of menus where you tune your guitar (i.e. headstock is shown), reset the cache because user may want to change the headstock style
 			if (previousMenu != currentMenu && MemHelpers::IsInStringArray(currentMenu, tuningMenus)) { 
