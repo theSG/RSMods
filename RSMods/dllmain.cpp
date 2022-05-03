@@ -37,7 +37,7 @@ unsigned WINAPI EnumerationThread() {
 }
 
 void ChangePresetTuning() {
-	std::this_thread::sleep_for(std::chrono::milliseconds(150)); //Waiting for prest to change
+	std::this_thread::sleep_for(std::chrono::milliseconds(150)); //Waiting for preset to change
 	Midi::AutomateTuningOnPreset();
 }
 
@@ -155,13 +155,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			else if (keyPressed == 0x41 && (GetKeyState(VK_CONTROL) & 0x8000)) { //CTRL + A
 				Settings::UpdateSettings();
 				std::cout << "Triggered Setting Update" << std::endl;
-			}
-			else if (keyPressed == Settings::GetKeyBind("MasterVolumeKey") && MemHelpers::IsInSong()) { // up Volume
-				VolumeControl::IncreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
-			}
-			else if (keyPressed == Settings::GetKeyBind("SongVolumeKey") && MemHelpers::IsInSong()) { // down Volume
-				VolumeControl::DecreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
-			}
+			}			
 			/*
 			else if (keyPressed == Settings::GetKeyBind("Player1VolumeKey") && Settings::ReturnSettingValue("VolumeControlEnabled") == "on") { // P1 Guitar & Bass Volume
 				if ((GetKeyState(VK_CONTROL) & 0x8000)) // Is Control Pressed
@@ -280,7 +274,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			//	std::cout << "Restart Complete!" << std::endl;
 			//}
 
-
+			/*
 			else if (keyPressed == Settings::GetKeyBind("RRSpeedKey") && Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on" && (MemHelpers::IsInStringArray(D3DHooks::currentMenu, fastRRModes)) && RiffRepeater::loggedCurrentSongID) { // Riff Repeater over 100%
 
 				// Convert UI Speed -> Real Speed
@@ -307,6 +301,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 
 				//std::cout << "Triggered Mod: Riff Repeater Speed set to " << realSongSpeed << "% which is equivalent to " << RiffRepeater::ConvertSpeed(realSongSpeed) << " Wwise RTPC." << std::endl;
 			}
+			*/
 			else if (keyPressed == Settings::GetKeyBind("ToggleExtendedRangeKey"))
 			{
 				Settings::ToggleExtendedRangeMode();
@@ -316,96 +311,56 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 
 			// send some midi on keypress
 
-			else if (keyPressed == VK_OEM_COMMA)
-			{
-			Midi::SendProgramChange(1, 0);
+			else if (keyPressed == VK_OEM_COMMA) {
+				Midi::SendProgramChange(1, 0);
+				if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
+				//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+				}
+			else if (keyPressed == VK_OEM_PERIOD) {
+				Midi::SendProgramChange(2, 0);
+				if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
+				//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+				}
+			else if (keyPressed == VK_OEM_2) { // ?key
+				Midi::SendProgramChange(3, 0);
+				if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
+				//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+				}
+			else if (keyPressed == VK_NUMPAD0) {
+				Midi::SendProgramChange(4, 0);
+				//std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
+				}
+			else if (keyPressed == VK_DECIMAL) { // num.
+				Midi::SendProgramChange(5, 0);
+				if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
+				//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+				}
+			else if (keyPressed == VK_OEM_1) { // ;:key
+				Midi::SendProgramChange(6, 0);
+				if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
+				//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+				}
+			else if (keyPressed == VK_OEM_7) { // '"key
+				Midi::SendProgramChange(7, 0);
+				if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
+				//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
+				}
 
-			if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
-			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
-			}
-			else if (keyPressed == VK_OEM_PERIOD)
-			{
-			Midi::SendProgramChange(2, 0);
-			
-			if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
-			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
-			}
-			else if (keyPressed == VK_OEM_2)
-			{
-			Midi::SendProgramChange(3, 0);
-			
-			if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
-			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
-			}
-			else if (keyPressed == VK_NUMPAD0)
-			{
-			Midi::SendProgramChange(4, 0);
-
-			//std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
-			}
-			else if (keyPressed == VK_DECIMAL)
-			{
-			Midi::SendProgramChange(5, 0);
-			
-			if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
-			//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
-			}
-			
-			// Rewind song by X seconds mod. Z key 5sec-restart
+			// wwise seek 
 			else if (keyPressed == 0x5A && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
-			// SongTimer is stored in seconds, while RewindBy is stored in milliseconds.
-			// We need milliseconds to send to Wwise, so change SongTimer to milliseconds, then subtract the Rewind value.
-
-			AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) - 5000);
-			if (GetKeyState(VK_SHIFT) & 0x8000) seekTo = 0;
-			// RewindBy is greater than the amount of time we've been in the song.
-			// Reset seekTo to 0 to prevent seeking to a negative time.
-			if (seekTo < 0) {
-			//	std::cout << "(REWIND) Tried to seek to " << seekTo << "ms into the song. Resetting to 0." << std::endl;
-				seekTo = 0;
+				//Z key - restart x58
+				AkTimeMs seekTo = 1000;
+				WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
+				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
+				//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
 			}
-
-			// Send event to Wwise to rewind the song.
-			// Or more accurately, move to the seek time since Wwise doesn't have a rewind function.
-			WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
-
-			// Tell Rocksmith to make all notes before the section we want the user to play to be greyed out.
-			// While this isn't absolutely necessary, it is best to have this run just in case.
-			// Our seek time needs to be stored as milliseconds when sending to Wwise, but we need to have it in seconds when setting the GreyNoteTimer.
-			MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
-
-			//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
-			}
-			// X key 10-20sec
-			else if (keyPressed == 0x58 && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
-				
-			AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 10000);
-			if (GetKeyState(VK_SHIFT) & 0x8000) seekTo += 10000;
-
-			//if (seekTo < 0) {
-			//	std::cout << "(REWIND) Tried to seek to " << seekTo << "ms into the song. Resetting to 0." << std::endl;
-			//	seekTo = 0;
-
-			WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
-
-			MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
-
-			//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
-			}
-			// C key 30 sec - 1 min
 			else if (keyPressed == 0x43 && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
-
-			AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 30000);
-			if (GetKeyState(VK_SHIFT) & 0x8000) seekTo += 30000;
-			//if (seekTo < 0) {
-			//	std::cout << "(REWIND) Tried to seek to " << seekTo << "ms into the song. Resetting to 0." << std::endl;
-			//	seekTo = 0;
-
-			WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
-
-			MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
-
-			//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
+				// C key - end song
+				AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 90000);
+				//if (GetKeyState(VK_SHIFT) & 0x8000) seekTo += 30000;
+				WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
+				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
+				//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
 			}
 			/*
 			else if (keyPressed == VK_F1)
@@ -436,8 +391,53 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				D3DHooks::menuEnabled = !D3DHooks::menuEnabled;
 
 		}
-		*/
+		*/	
 	}
+
+	else if (msg == WM_KEYDOWN) {
+		if (D3DHooks::GameLoaded) {
+			// Rewind song by X seconds mod. left
+			if (keyPressed == VK_LEFT && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
+				AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) - 5000);
+					if (GetKeyState(VK_CONTROL) & 0x8000) seekTo -= 10000;
+						if (seekTo < 0) {
+							seekTo = 1000;
+						}
+				WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
+				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
+				//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
+			}
+			else if (keyPressed == VK_RIGHT && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
+				// right
+				AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 5000);
+				if (GetKeyState(VK_CONTROL) & 0x8000) seekTo += 10000;
+				WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
+				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
+				//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
+			}
+			else if (keyPressed == VK_UP && MemHelpers::IsInSong() && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) { // up Volume
+				if ((GetAsyncKeyState(VK_CONTROL) < 0) && RiffRepeater::loggedCurrentSongID) {
+					realSongSpeed = RiffRepeater::GetSpeed(true);
+					realSongSpeed += (float)Settings::GetModSetting("RRSpeedInterval");
+					if (realSongSpeed > 400.f) realSongSpeed = 400.f;
+					RiffRepeater::SetSpeed(realSongSpeed, true);
+					RiffRepeater::EnableTimeStretch();
+				}
+				else VolumeControl::IncreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
+			}
+			else if (keyPressed == VK_DOWN && MemHelpers::IsInSong() && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) { // down Volume
+				if ((GetAsyncKeyState(VK_CONTROL) < 0) && RiffRepeater::loggedCurrentSongID) {
+					realSongSpeed = RiffRepeater::GetSpeed(true);
+					realSongSpeed -= (float)Settings::GetModSetting("RRSpeedInterval");
+					if (realSongSpeed < 25.f) realSongSpeed = 25.f;
+					RiffRepeater::SetSpeed(realSongSpeed, true);
+					RiffRepeater::EnableTimeStretch();
+				}
+				else VolumeControl::DecreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
+			}
+		}
+	}
+
 	/*
 	// Update settings from GUI. Done on GUI open AND on GUI setting save.
 	else if (msg == WM_COPYDATA) {
@@ -731,7 +731,8 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 	// Draw text on screen || NOTE: NEVER USE SET VALUES. Always do division of WindowSize X AND Y so every resolution should have the text in around the same spot.
 	if (D3DHooks::GameLoaded) {
 
-		if (Settings::ReturnSettingValue("VolumeControlEnabled") == "on" && (MemHelpers::IsInSong() || AutomatedSelectedVolume)) { // Show Stuff
+		if (Settings::ReturnSettingValue("VolumeControlEnabled") == "on" && (MemHelpers::IsInSong() || AutomatedSelectedVolume)) { 
+			// Show Stuff on VK_END ChangedSelVolKey
 			float volume = 0;
 			RTPCValue_type type = RTPCValue_GameObject;
 			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char(mixerInternalNames[currentVolumeIndex].c_str(), AK_INVALID_GAME_OBJECT, &volume, &type);
@@ -743,7 +744,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 				int notesHit = MemHelpers::GetNoteHits();
 				int notesMiss = MemHelpers::GetNoteMiss();
 				if (notesHit > 0 ) //don't draw in disconected //&& MemHelpers::IsInStringArray(MemHelpers::GetCurrentMenu(), learnASongModes)
-					MemHelpers::DX9DrawText(std::to_string((float)notesHit / (notesHit + notesMiss) * 100).erase(5,3) + "%", whiteText,
+					MemHelpers::DX9DrawText(std::to_string((float)notesHit / (notesHit + notesMiss) * 100.f).erase(5,3) + "%", whiteText,
 						(int)(WindowSize.width / 1.5), (int)(WindowSize.height / 1.049),
 						(int)(WindowSize.width / 1.225), (int)(WindowSize.height),
 						pDevice, { NULL, NULL }, DT_RIGHT | DT_NOCLIP);

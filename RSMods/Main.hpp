@@ -42,7 +42,7 @@ bool takenScreenshotOfThisScreen = false; // Has the user taken a screenshot of 
 bool saveNewRRSpeedToFile = false;
 
 // Mixer Values
-inline unsigned int currentVolumeIndex = 0; // Mixer volume to change. 0 - Disabled, 1 - Master, 2 - Song, 3 - P1, 4 - P2, 5 - Mic, 6 - VO, 7 - SFX
+inline unsigned int currentVolumeIndex = 1; // Mixer volume to change. 0 - Disabled, 1 - Master, 2 - Song, 3 - P1, 4 - P2, 5 - Mic, 6 - VO, 7 - SFX
 
 inline std::vector<std::string> mixerInternalNames = { // Needs to be char* as that's what SetRTPCValue needs.
 		{""}, // Disabled (Don't show the user any values)
