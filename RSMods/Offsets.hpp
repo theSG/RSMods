@@ -99,7 +99,6 @@ namespace Offsets {
 	extern std::vector<unsigned int> ptr_greyOutNoteTimerOffsets;
 
 
-
 	// Song Speed (Riff Repeater Speed! Not Scroll Speed)
 	extern uintptr_t ptr_previewName;
 	extern std::vector<unsigned int> ptr_previewNameOffsets;
@@ -114,6 +113,10 @@ namespace Offsets {
 	extern uintptr_t ptr_twoRTCBypass;
 	extern const char* ptr_twoRTCBypass_patch;
 	extern const char* ptr_twoRTCBypass_original;
+
+	// Non-stop Play Pre-Song Timer.
+// STATIC. This does not need any offsets since the address is hard-coded into the executable.
+	extern uintptr_t ptr_NonStopPlayPreSongTimer;
 
 	// Colorblind Mode
 	extern uintptr_t ptr_colorBlindMode;
@@ -131,6 +134,16 @@ namespace Offsets {
 	extern uintptr_t ptr_Wwise_Log_PostEventHookJmpBck;
 	extern uintptr_t ptr_Wwise_Log_SetRTPCValueHook;
 	extern uintptr_t ptr_Wwise_Log_SetRTPCValueHookJmpBck;
+
+	// Bug Prevention
+	extern uintptr_t ptr_OculusCrashJmp;
+	extern uintptr_t ptr_StuckToneJmp;
+	extern uintptr_t ptr_PnpJmp_1;
+	extern uintptr_t ptr_PnpJmp_2;
+	extern uintptr_t ptr_Password_LimitCharacters_Clipboard;
+	extern uintptr_t ptr_Password_LimitCharacters;
+	extern uintptr_t ptr_AdvancedDisplayCrash;
+	extern uintptr_t ptr_AdvancedDisplayCrashJmpBck;
 
 	// Audio In Background
 	extern uintptr_t ptr_IsWindowInFocus;

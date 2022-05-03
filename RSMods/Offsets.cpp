@@ -120,6 +120,10 @@ namespace Offsets {
 	const char* ptr_twoRTCBypass_patch = "\xE9\x2F\x01\x00\x00\x90";
 	const char* ptr_twoRTCBypass_original = "\x8B\xB5\x8C\xFF\xFF\xFF";
 
+	// Non-stop Play Pre-Song Timer.
+	// STATIC. This does not need any offsets since the address is hard-coded into the executable.
+	uintptr_t ptr_NonStopPlayPreSongTimer = 0x012218F8;
+
 	// Colorblind Mode
 	uintptr_t ptr_colorBlindMode = 0x00F5C50C;
 	std::vector<unsigned int> ptr_colorBlindModeOffsets{ 0x14, 0x24, 0x348 };
@@ -146,6 +150,15 @@ namespace Offsets {
 	uintptr_t ptr_Wwise_Log_SetRTPCValueHook = 0x01f58a9d;
 	uintptr_t ptr_Wwise_Log_SetRTPCValueHookJmpBck = 0x01f58a9d + 5;
 
+	// Bug Prevention
+	uintptr_t ptr_OculusCrashJmp = 0x01F0C25E;
+	uintptr_t ptr_StuckToneJmp = 0x017CB373;
+	uintptr_t ptr_PnpJmp_1 = 0x01F0C25E;
+	uintptr_t ptr_PnpJmp_2 = 0x01F0C48F;
+	uintptr_t ptr_Password_LimitCharacters_Clipboard = 0x015B0541;
+	uintptr_t ptr_Password_LimitCharacters = 0x015B063E;
+	uintptr_t ptr_AdvancedDisplayCrash = 0x1934D0C;
+	uintptr_t ptr_AdvancedDisplayCrashJmpBck = 0x1934D13;
 
 	// Audio In Background
 	uintptr_t ptr_IsWindowInFocus = 0x0124ea78; // Is the window currently in focus? 0 - Out of focus, 1 - In focus.

@@ -34,6 +34,7 @@
 #include "Mods/RiffRepeater.hpp"
 #include "Mods/AudioDevices.hpp"
 #include "Mods/TrueTuning.hpp"
+#include "Mods/BugPrevention.hpp"
 
 std::vector<std::string> effectQueue;
 std::vector<std::string> enabledEffects;

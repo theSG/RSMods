@@ -304,7 +304,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			*/
 			else if (keyPressed == Settings::GetKeyBind("ToggleExtendedRangeKey"))
 			{
-				Settings::ToggleExtendedRangeMode();
+			D3DHooks::UseERExclusivelyInThisSong = !D3DHooks::UseERExclusivelyInThisSong;
+			MemHelpers::ToggleCB(D3DHooks::UseERExclusivelyInThisSong);
 
 				std::cout << "Triggered Mod: Toggle Extended Range" << std::endl;
 			}
@@ -1063,7 +1064,9 @@ unsigned WINAPI MainThread() {
 	ClearMDMPs();
 	Midi::InitMidi();
 	Midi::tuningOffset = Settings::GetModSetting("TuningOffset");
-	AudioDevices::SetupMicrophones();
+	//AudioDevices::SetupMicrophones();
+	BugPrevention::AllowComplexPasswords();
+	BugPrevention::PreventAdvancedDisplayCrash();
 #ifdef _FIX_STORE
 	MemUtil::PatchAdr((void*)Offsets::steamApiUri, "%s://localhost:5154/api/requests/%d,%s,%s", 42); // Proxy available here: https://github.com/ffio1/SteamAPIProxy
 #endif
@@ -1123,6 +1126,8 @@ unsigned WINAPI MainThread() {
 				else if (Settings::ReturnSettingValue("BypassTwoRTCMessageBox") == "on" && *(char*)Offsets::ptr_twoRTCBypass == Offsets::ptr_twoRTCBypass_original[0]) // User originally had BypassTwoRTCMessageBox off, but now they want it turned on.
 					MemUtil::PatchAdr((LPVOID)Offsets::ptr_twoRTCBypass, (LPVOID)Offsets::ptr_twoRTCBypass_patch, 6);
 			}
+
+			if (MemHelpers::GetNonStopPlayTimer() != 2.0) MemHelpers::SetNonStopPlayTimer(2.0);
 
 			if (Settings::ReturnSettingValue("LinearRiffRepeater") == "on" && !RiffRepeater::currentlyEnabled_LinearRR) // User had Linear RR off, but now they want it turned on.
 				RiffRepeater::EnableLinearSpeeds();
