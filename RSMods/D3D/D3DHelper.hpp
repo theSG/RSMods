@@ -102,6 +102,12 @@ inline std::vector<std::string> learnASongModes = {
 	"NonStopPlay_Pause",
 };
 
+inline std::vector<std::string> learnASongSkipAfter = {
+	"LearnASong_Game",
+	"LearnASong_Pause",
+	"LearnASong_SongReview",
+};
+
 inline std::vector<std::string> lasPauseMenus = {
 	"LearnASong_Pause",
 	"NonStopPlay_Pause",

@@ -1127,7 +1127,7 @@ unsigned WINAPI MainThread() {
 					MemUtil::PatchAdr((LPVOID)Offsets::ptr_twoRTCBypass, (LPVOID)Offsets::ptr_twoRTCBypass_patch, 6);
 			}
 
-			if (MemHelpers::GetNonStopPlayTimer() != 2.0) MemHelpers::SetNonStopPlayTimer(2.0);
+			//if (MemHelpers::GetNonStopPlayTimer() != 2.0) MemHelpers::SetNonStopPlayTimer(2.0);
 
 			if (Settings::ReturnSettingValue("LinearRiffRepeater") == "on" && !RiffRepeater::currentlyEnabled_LinearRR) // User had Linear RR off, but now they want it turned on.
 				RiffRepeater::EnableLinearSpeeds();
@@ -1359,9 +1359,15 @@ unsigned WINAPI MainThread() {
 			else
 				takenScreenshotOfThisScreen = false;
 
-			if (Settings::ReturnSettingValue("SkipSelection") == "on" && MemHelpers::IsInStringArray(currentMenu, skipScreens))
-				AutoEnterGame();
-
+			// Skip menus
+			if (Settings::ReturnSettingValue("SkipSelection") == "on") {
+				if (MemHelpers::IsInStringArray(currentMenu, skipScreens)) Util::SendKey(VK_RETURN);
+				if (MemHelpers::IsInStringArray(previousMenu, learnASongSkipAfter) && currentMenu == "LearnASong_SongOptions") {
+					Sleep(1000);
+					Util::SendKey(VK_ESCAPE);
+				}
+				if (MemHelpers::IsInStringArray(currentMenu, preSongTuners)) Util::SendKey(VK_DELETE);
+			}
 			// If the current menu is not the same as the previous menu and if it's one of menus where you tune your guitar (i.e. headstock is shown), reset the cache because user may want to change the headstock style
 			if (previousMenu != currentMenu && MemHelpers::IsInStringArray(currentMenu, tuningMenus)) { 
 				resetHeadstockCache = true;
