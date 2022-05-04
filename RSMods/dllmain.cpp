@@ -355,6 +355,16 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
 				//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
 			}
+			else if (keyPressed == 0x58 && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
+				// X key
+				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
+				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
+				MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 5.0, sizeof(double));
+				RiffRepeater::SetSpeed(100.f, true);
+				RiffRepeater::EnableTimeStretch();
+				MemHelpers::SetNonStopPlayTimer(2.0);
+				//std::cout << "Reset" << std::endl;
+			}
 			else if (keyPressed == 0x43 && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
 				// C key - end song
 				AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 90000);
@@ -363,24 +373,16 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
 				//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
 			}
-			/*
 			else if (keyPressed == VK_F1)
-			{
-			MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
-			DWORD oldProtect;
-			VirtualProtect((LPVOID)Offsets::ptr_scrollSpeedMultiplier, 8, PAGE_READWRITE, &oldProtect);
-			Offsets::ref_scrollSpeedMultiplier = 2.5;
-			VirtualProtect((LPVOID)Offsets::ptr_scrollSpeedMultiplier, 8, oldProtect, &oldProtect);
-			}
+				{
+				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
+				MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 2.5, sizeof(double));
+				}
 			else if (keyPressed == VK_F2)
-			{
-			MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
-			DWORD oldProtect;
-			VirtualProtect((LPVOID)Offsets::ptr_scrollSpeedMultiplier, 8, PAGE_READWRITE, &oldProtect);
-			Offsets::ref_scrollSpeedMultiplier = 8.5;
-			VirtualProtect((LPVOID)Offsets::ptr_scrollSpeedMultiplier, 8, oldProtect, &oldProtect);
-			}
-			*/
+				{
+				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
+				MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 8.5, sizeof(double));
+				}
 
 			if (Settings::ReturnSettingValue("AutoTuneForSongWhen") == "manual" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, tuningMenus) && keyPressed == VK_DELETE) {
 				Midi::userWantsToUseAutoTuning = true;
@@ -779,7 +781,13 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		//	MemHelpers::DX9DrawText("Riff Repeater Speed: " + std::to_string((int)roundf(realSongSpeed)) + "%", whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 		//}
 
-		//MemHelpers::DX9DrawText(MemHelpers::GetCurrentMenu(), whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+		// MemHelpers::DX9DrawText(MemHelpers::GetCurrentMenu(), whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+
+		// AkRtpcValue sgval;
+		// RTPCValue_type sgtype = RTPCValue_GameObject;
+		// AKRESULT sgret = WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char("Pedal_EQ5_2200", AK_INVALID_GAME_OBJECT, &sgval, &sgtype);
+		// MemHelpers::DX9DrawText(std::to_string(sgret)+" "+ std::to_string(sgval), whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+
 
 		if (Settings::ReturnSettingValue("ShowCurrentNoteOnScreen") == "on" && GuitarSpeak::GetCurrentNoteName() != (std::string)"") { // Show Current Note On Screen
 			if (MemHelpers::IsInSong())
@@ -1065,7 +1073,7 @@ unsigned WINAPI MainThread() {
 	Midi::InitMidi();
 	Midi::tuningOffset = Settings::GetModSetting("TuningOffset");
 	//AudioDevices::SetupMicrophones();
-	BugPrevention::AllowComplexPasswords();
+	//BugPrevention::AllowComplexPasswords();
 	BugPrevention::PreventAdvancedDisplayCrash();
 #ifdef _FIX_STORE
 	MemUtil::PatchAdr((void*)Offsets::steamApiUri, "%s://localhost:5154/api/requests/%d,%s,%s", 42); // Proxy available here: https://github.com/ffio1/SteamAPIProxy
