@@ -41,6 +41,14 @@ void ChangePresetTuning() {
 	Midi::AutomateTuningOnPreset();
 }
 
+void AutomatedToneChange(int command, std::string name) {
+	Midi::SendProgramChange(command, 0);
+	std::thread(ChangePresetTuning).detach();
+	drawSomeStuffTime = std::chrono::steady_clock::now();
+	drawToneName = name;
+	drawTone = true;
+}
+
 /// <summary>
 /// Send Midi Data Async
 /// </summary>
@@ -800,8 +808,14 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char("P1_InputVol_Calibration", AK_INVALID_GAME_OBJECT, &sgivc, &sgtype);
 			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char("P1_InputVol_Calibration_Return", AK_INVALID_GAME_OBJECT, &sgivcr, &sgtype);
 			MemHelpers::DX9DrawText(std::to_string(sgnof) + "\n" + std::to_string(sgmtbr) + "\n" + std::to_string(sgivc) + "\n"
-				+ std::to_string(sgivcr), 0x00FFFF, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+				+ std::to_string(sgivcr), whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 			if (currentTime - drawSomeStuffTime > std::chrono::seconds(5))	drawSomeStuff = false;
+		}
+
+		if (drawTone) {
+			const auto currentTime = std::chrono::steady_clock::now();
+			MemHelpers::DX9DrawText("Tone Change: " + drawToneName, whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+			if (currentTime - drawSomeStuffTime > std::chrono::seconds(5))	drawTone = false;
 		}
 
 		if (Settings::ReturnSettingValue("ShowCurrentNoteOnScreen") == "on" && GuitarSpeak::GetCurrentNoteName() != (std::string)"") { // Show Current Note On Screen

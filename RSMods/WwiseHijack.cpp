@@ -480,11 +480,24 @@ namespace WwiseLogging {
 			!strcmp(rtpcName, "Mixer_Player1") ||
 			!strcmp(rtpcName, "Mixer_Player2") ||
 			!strcmp(rtpcName, "Mixer_VO") ||
+			!strcmp(rtpcName, "Crowd_RRVolumeControl") ||
 			!strcmp(rtpcName, "MusicRamping")
 			)
 			return; // To prevent spamming of the log. If you need to look at these, remove the if-statement.
 
-		std::cout << "(Wwise) SetRTPCValue: " << rtpcName << " to " << rtpcValue << " on game object 0x" << std::hex << gameObject << std::endl;
+		//std::cout << "(Wwise) SetRTPCValue: " << rtpcName << " to " << rtpcValue << " on game object 0x" << std::hex << gameObject << std::endl;
+		if (!strcmp(rtpcName, "Amp_OrangeTinyTerror_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
+		if (!strcmp(rtpcName, "Amp_HG500_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Distortion" << std::endl;
+		if (!strcmp(rtpcName, "DI_Amp_TubePre_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Acoustic"); //std::cout << "Acoustic" << std::endl;
+		if (!strcmp(rtpcName, "Amp_GB38_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
+		if (!strcmp(rtpcName, "Amp_BT15_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat"); //std::cout << "Flat" << std::endl;
+		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 12.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(6, "Distortion"); //std::cout << "Distortion" << std::endl;
+		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 82.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Distortion" << std::endl;
+		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 52.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Clean"); //std::cout << "Distortion" << std::endl;
+		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 66.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Clean"); //std::cout << "Distortion" << std::endl;
+		if (!strcmp(rtpcName, "Amp_HG180_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(6, "Distortion"); //std::cout << "Distortion" << std::endl;
+		if (!strcmp(rtpcName, "Amp_TW22_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat"); //std::cout << "Flat" << std::endl;
+		if (!strcmp(rtpcName, "Amp_CS100_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat"); //std::cout << "Flat" << std::endl;
 	}
 
 	void __declspec(naked) hook_log_SetRTPCValue() {
