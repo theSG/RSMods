@@ -424,7 +424,7 @@ namespace WwiseVariables {
 	
 	*/
 
-#ifdef _WWISE_LOGS
+//#ifdef _WWISE_LOGS
 namespace WwiseLogging {
 
 	void __stdcall log_PostEvent_Name(char* eventName, int gameObject) {
@@ -473,6 +473,13 @@ namespace WwiseLogging {
 			!strcmp(rtpcName, "P1_Streak_Chord_Count") ||
 			!strcmp(rtpcName, "P1_Streak_Phrase_Count") ||
 			!strcmp(rtpcName, "P2_Instrument_Volume") ||
+			!strcmp(rtpcName, "venue") ||
+			!strcmp(rtpcName, "Mixer_Mic") ||
+			!strcmp(rtpcName, "Mixer_SFX") ||
+			!strcmp(rtpcName, "Mixer_Music") ||
+			!strcmp(rtpcName, "Mixer_Player1") ||
+			!strcmp(rtpcName, "Mixer_Player2") ||
+			!strcmp(rtpcName, "Mixer_VO") ||
 			!strcmp(rtpcName, "MusicRamping")
 			)
 			return; // To prevent spamming of the log. If you need to look at these, remove the if-statement.
@@ -503,4 +510,4 @@ namespace WwiseLogging {
 		MemUtil::PlaceHook((void*)Offsets::ptr_Wwise_Log_SetRTPCValueHook, hook_log_SetRTPCValue, 5);
 	}
 }
-#endif
+//#endif

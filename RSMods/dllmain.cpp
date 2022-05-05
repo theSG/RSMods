@@ -349,7 +349,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 
 			// wwise seek 
 			else if (keyPressed == 0x5A && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
-				//Z key - restart x58
+				//Z key - restart
 				AkTimeMs seekTo = 1000;
 				WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
 				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
@@ -357,12 +357,9 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			}
 			else if (keyPressed == 0x58 && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
 				// X key
-				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
-				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
 				MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 5.0, sizeof(double));
 				RiffRepeater::SetSpeed(100.f, true);
 				RiffRepeater::EnableTimeStretch();
-				MemHelpers::SetNonStopPlayTimer(2.0);
 				//std::cout << "Reset" << std::endl;
 			}
 			else if (keyPressed == 0x43 && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
@@ -376,12 +373,17 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			else if (keyPressed == VK_F1)
 				{
 				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
-				MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 2.5, sizeof(double));
+				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
+				if (GetAsyncKeyState(VK_SHIFT) < 0)
+					MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 7.5, sizeof(double));
+				else MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 2.5, sizeof(double));
 				}
 			else if (keyPressed == VK_F2)
 				{
-				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
-				MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 8.5, sizeof(double));
+				//if (GetAsyncKeyState(VK_CONTROL) < 0)
+				MemHelpers::SetNonStopPlayTimer(2.0);
+				drawSomeStuff = true;
+				drawSomeStuffTime = std::chrono::steady_clock::now();
 				}
 
 			if (Settings::ReturnSettingValue("AutoTuneForSongWhen") == "manual" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, tuningMenus) && keyPressed == VK_DELETE) {
@@ -789,6 +791,19 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		// MemHelpers::DX9DrawText(std::to_string(sgret)+" "+ std::to_string(sgval), whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 
 
+		if (drawSomeStuff) {
+			const auto currentTime = std::chrono::steady_clock::now();
+			AkRtpcValue sgnof, sgmtbr, sgivc, sgivcr;
+			RTPCValue_type sgtype = RTPCValue_GameObject;
+			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char("P1_NoiseFloor", AK_INVALID_GAME_OBJECT, &sgnof, &sgtype);
+			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char("Meter_Tone_Balance_Return", AK_INVALID_GAME_OBJECT, &sgmtbr, &sgtype);
+			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char("P1_InputVol_Calibration", AK_INVALID_GAME_OBJECT, &sgivc, &sgtype);
+			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char("P1_InputVol_Calibration_Return", AK_INVALID_GAME_OBJECT, &sgivcr, &sgtype);
+			MemHelpers::DX9DrawText(std::to_string(sgnof) + "\n" + std::to_string(sgmtbr) + "\n" + std::to_string(sgivc) + "\n"
+				+ std::to_string(sgivcr), 0x00FFFF, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+			if (currentTime - drawSomeStuffTime > std::chrono::seconds(5))	drawSomeStuff = false;
+		}
+
 		if (Settings::ReturnSettingValue("ShowCurrentNoteOnScreen") == "on" && GuitarSpeak::GetCurrentNoteName() != (std::string)"") { // Show Current Note On Screen
 			if (MemHelpers::IsInSong())
 				MemHelpers::DX9DrawText(GuitarSpeak::GetCurrentNoteName(), whiteText, (int)(WindowSize.width / 5.5), (int)(WindowSize.height / 1.75), (int)(WindowSize.width / 5.75), (int)(WindowSize.height / 8), pDevice);
@@ -1094,10 +1109,10 @@ unsigned WINAPI MainThread() {
 	if (Settings::ReturnSettingValue("LinearRiffRepeater") == "on")
 		RiffRepeater::EnableLinearSpeeds();
 
-#ifdef _WWISE_LOGS // Only use in a debug environment. Will fill your log with spam!
-	WwiseLogging::Setup_log_PostEvent();
+//#ifdef _WWISE_LOGS // Only use in a debug environment. Will fill your log with spam!
+//	WwiseLogging::Setup_log_PostEvent();
 	WwiseLogging::Setup_log_SetRTPCValue();
-#endif
+//#endif
 
 	if (Settings::ReturnSettingValue("AllowAudioInBackground") == "on")
 		VolumeControl::AllowAltTabbingWithAudio();	
@@ -1371,8 +1386,10 @@ unsigned WINAPI MainThread() {
 			if (Settings::ReturnSettingValue("SkipSelection") == "on") {
 				if (MemHelpers::IsInStringArray(currentMenu, skipScreens)) Util::SendKey(VK_RETURN);
 				if (MemHelpers::IsInStringArray(previousMenu, learnASongSkipAfter) && currentMenu == "LearnASong_SongOptions") {
-					Sleep(1000);
+					Sleep(1300);
 					Util::SendKey(VK_ESCAPE);
+					Sleep(750);
+					Util::SendKey(VK_DOWN);
 				}
 				if (MemHelpers::IsInStringArray(currentMenu, preSongTuners)) Util::SendKey(VK_DELETE);
 			}

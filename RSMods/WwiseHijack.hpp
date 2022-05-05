@@ -2428,7 +2428,7 @@ namespace WwiseVariables {
 	//extern	tSetAudioInputCallbacks Rocksmith_SetAudioInputCallbacks;
 }
 
-#ifdef _WWISE_LOGS
+//#ifdef _WWISE_LOGS
 namespace WwiseLogging {
 	void hook_log_PostEvent();
 	void Setup_log_PostEvent();
@@ -2436,4 +2436,4 @@ namespace WwiseLogging {
 	void hook_log_SetRTPCValue();
 	void Setup_log_SetRTPCValue();
 }
-#endif
+//#endif
