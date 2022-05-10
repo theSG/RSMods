@@ -396,7 +396,7 @@ namespace Midi {
 				highestTuning -= 12;
 			if (highestTuning - 1 == lowestTuning) highestTuning = lowestTuning; //slightly better 7string workaround
 			selectedPedal.autoTuneFunction(highestTuning + tuningOffset, TrueTuning_Hertz);
-			std::cout << "(MIDI) Triggered Mod: Automated Tuning on Preset (Song)" << std::endl;
+			//std::cout << "(MIDI) Triggered Mod: Automated Tuning on Preset (Song)" << std::endl;
 		}
 	}
 
@@ -903,12 +903,12 @@ namespace Midi {
 				sentSemitoneInThisSong = true;
 			}
 			else
-				std::cout << "(MIDI) Software Pedal Error: Attempted to tune to " << highestTuning << " but the user doesn't have a value set for it." << std::endl;
+				//std::cout << "(MIDI) Software Pedal Error: Attempted to tune to " << highestTuning << " but the user doesn't have a value set for it." << std::endl;
 
 			if (TrueTuning_Hertz < 260.f)
 				TrueTuning_Hertz *= 2;
 			if (TrueTuning_Hertz > 465.f)
-				TrueTuning_Hertz == 440;
+				TrueTuning_Hertz = 440;
 
 			if (TrueTuning_Hertz != 440)
 				AutoTrueTuning(TrueTuning_Hertz);
@@ -919,7 +919,7 @@ namespace Midi {
 			if (TrueTuning_Hertz < 260.f)
 				TrueTuning_Hertz *= 2;
 			if (TrueTuning_Hertz > 465.f)
-				TrueTuning_Hertz == 440;
+				TrueTuning_Hertz = 440;
 
 			if (trueTuningMap.find(TrueTuning_Hertz) != trueTuningMap.end()) {
 				if (sendTrueTuningCommand == programChangeStatus)

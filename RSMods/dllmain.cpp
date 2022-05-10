@@ -390,8 +390,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				{
 				//if (GetAsyncKeyState(VK_CONTROL) < 0)
 				MemHelpers::SetNonStopPlayTimer(2.0);
-				drawSomeStuff = true;
-				drawSomeStuffTime = std::chrono::steady_clock::now();
+				//drawSomeStuff = true;
+				//drawSomeStuffTime = std::chrono::steady_clock::now();
 				}
 
 			if (Settings::ReturnSettingValue("AutoTuneForSongWhen") == "manual" && MemHelpers::IsInStringArray(D3DHooks::currentMenu, tuningMenus) && keyPressed == VK_DELETE) {
@@ -1402,7 +1402,7 @@ unsigned WINAPI MainThread() {
 				if (MemHelpers::IsInStringArray(previousMenu, learnASongSkipAfter) && currentMenu == "LearnASong_SongOptions") {
 					Sleep(1300);
 					Util::SendKey(VK_ESCAPE);
-					Sleep(750);
+					Sleep(1000);
 					Util::SendKey(VK_DOWN);
 				}
 				if (MemHelpers::IsInStringArray(currentMenu, preSongTuners)) Util::SendKey(VK_DELETE);
