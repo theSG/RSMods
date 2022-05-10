@@ -2436,5 +2436,5 @@ namespace WwiseLogging {
 	void hook_log_SetRTPCValue();
 	void Setup_log_SetRTPCValue();
 }
-extern void AutomatedToneChange(int command, std::string name);
+extern void AutomatedToneChange(int command, std::string name, bool isapreset = true);
 //#endif

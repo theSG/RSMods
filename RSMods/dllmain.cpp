@@ -41,12 +41,16 @@ void ChangePresetTuning() {
 	Midi::AutomateTuningOnPreset();
 }
 
-void AutomatedToneChange(int command, std::string name) {
-	Midi::SendProgramChange(command, 0);
-	std::thread(ChangePresetTuning).detach();
+void AutomatedToneChange(int command, std::string name, bool isapreset) {
 	drawSomeStuffTime = std::chrono::steady_clock::now();
+	if (drawToneName == name) { //already using this preset
+		drawTone = true;
+		return;
+	}
 	drawToneName = name;
 	drawTone = true;
+	Midi::SendProgramChange(command, 0);
+	if (isapreset) std::thread(ChangePresetTuning).detach();
 }
 
 /// <summary>

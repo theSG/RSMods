@@ -490,16 +490,16 @@ namespace WwiseLogging {
 		if (!strcmp(rtpcName, "Amp_HG500_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
 		if (!strcmp(rtpcName, "DI_Amp_TubePre_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Acoustic"); //std::cout << "Acoustic" << std::endl;
 		if (!strcmp(rtpcName, "Amp_GB38_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
-		if (!strcmp(rtpcName, "Amp_BT15_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat"); //std::cout << "Flat" << std::endl;
+		if (!strcmp(rtpcName, "Amp_BT15_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat", false); //std::cout << "Flat" << std::endl;
 		if (!strcmp(rtpcName, "Amp_Marshall1962Bluesbreaker_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(6, "Distortion"); //std::cout << "Distortion" << std::endl;
 		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 12.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(6, "Distortion"); //std::cout << "Distortion" << std::endl;
 		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 82.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
-		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 52.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat"); //std::cout << "Flat" << std::endl;
+		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 52.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat", false); //std::cout << "Flat" << std::endl;
 		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 60.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
-		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 66.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat"); //std::cout << "Flat" << std::endl;
+		if (!strcmp(rtpcName, "Amp_MarshallPlexi_Loudness1") && rtpcValue == 66.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat", false); //std::cout << "Flat" << std::endl;
 		if (!strcmp(rtpcName, "Amp_HG180_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(6, "Distortion"); //std::cout << "Distortion" << std::endl;
 		if (!strcmp(rtpcName, "Amp_TW22_Gain") && rtpcValue == 90.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
-		if (!strcmp(rtpcName, "Amp_TW22_Gain") && rtpcValue == 70.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat"); //std::cout << "Flat" << std::endl;
+		if (!strcmp(rtpcName, "Amp_TW22_Gain") && rtpcValue == 70.f && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat", false); //std::cout << "Flat" << std::endl;
 		if (!strcmp(rtpcName, "Amp_AT120_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
 		if (!strcmp(rtpcName, "Amp_GB50_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
 		if (!strcmp(rtpcName, "Amp_CA85_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
@@ -507,7 +507,7 @@ namespace WwiseLogging {
 		if (!strcmp(rtpcName, "Amp_TW40_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
 		if (!strcmp(rtpcName, "Amp_EN30_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
 		if (!strcmp(rtpcName, "Amp_AT20_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
-		if (!strcmp(rtpcName, "Amp_CS100_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat"); //std::cout << "Flat" << std::endl;
+		if (!strcmp(rtpcName, "Amp_CS100_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(4, "Flat", false); //std::cout << "Flat" << std::endl;
 	}
 
 	void __declspec(naked) hook_log_SetRTPCValue() {
