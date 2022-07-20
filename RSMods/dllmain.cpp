@@ -432,7 +432,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
 				//std::cout << "(REWIND) Seeked to " << seekTo << "ms." << std::endl;
 			}
-			else if (keyPressed == VK_UP && MemHelpers::IsInSong() && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) { // up Volume
+			else if (keyPressed == VK_UP && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) { // up Volume
 				if ((GetAsyncKeyState(VK_CONTROL) < 0) && RiffRepeater::loggedCurrentSongID) {
 					realSongSpeed = RiffRepeater::GetSpeed(true);
 					realSongSpeed += (float)Settings::GetModSetting("RRSpeedInterval");
@@ -442,7 +442,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				}
 				else VolumeControl::IncreaseVolume(Settings::GetModSetting("VolumeControlInterval"), "Mixer_Music");
 			}
-			else if (keyPressed == VK_DOWN && MemHelpers::IsInSong() && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) { // down Volume
+			else if (keyPressed == VK_DOWN && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) { // down Volume
 				if ((GetAsyncKeyState(VK_CONTROL) < 0) && RiffRepeater::loggedCurrentSongID) {
 					realSongSpeed = RiffRepeater::GetSpeed(true);
 					realSongSpeed -= (float)Settings::GetModSetting("RRSpeedInterval");
@@ -755,9 +755,9 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 			WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char(mixerInternalNames[currentVolumeIndex].c_str(), AK_INVALID_GAME_OBJECT, &volume, &type);
 
 			if (currentVolumeIndex != 0) {
-				MemHelpers::DX9DrawText("Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
+				//MemHelpers::DX9DrawText("Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
 				realSongSpeed = RiffRepeater::GetSpeed(true);
-				MemHelpers::DX9DrawText(">>>: " + std::to_string((int)roundf(realSongSpeed)), whiteText, (int)(WindowSize.width / 1.2), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+				MemHelpers::DX9DrawText(">>>: " + std::to_string((int)roundf(realSongSpeed))+ "  Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.2), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 				int notesHit = MemHelpers::GetNoteHits();
 				int notesMiss = MemHelpers::GetNoteMiss();
 				if (notesHit > 0 ) //don't draw in disconected //&& MemHelpers::IsInStringArray(MemHelpers::GetCurrentMenu(), learnASongModes)
@@ -802,7 +802,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		// AKRESULT sgret = WwiseVariables::Wwise_Sound_Query_GetRTPCValue_Char("Pedal_EQ5_2200", AK_INVALID_GAME_OBJECT, &sgval, &sgtype);
 		// MemHelpers::DX9DrawText(std::to_string(sgret)+" "+ std::to_string(sgval), whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 
-
+		/*
 		if (drawSomeStuff) {
 			const auto currentTime = std::chrono::steady_clock::now();
 			AkRtpcValue sgnof, sgmtbr, sgivc, sgivcr;
@@ -815,6 +815,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 				+ std::to_string(sgivcr), whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 			if (currentTime - drawSomeStuffTime > std::chrono::seconds(5))	drawSomeStuff = false;
 		}
+		*/
 
 		if (drawTone) {
 			const auto currentTime = std::chrono::steady_clock::now();
