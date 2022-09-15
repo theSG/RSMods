@@ -425,7 +425,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 		if (D3DHooks::GameLoaded) {
 			// Rewind song by X seconds mod. left
 			if (keyPressed == VK_LEFT && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
-				AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) - 5000);
+				AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) - 2500);
 					if (GetKeyState(VK_CONTROL) & 0x8000) seekTo -= 10000;
 						if (seekTo < 0) {
 							seekTo = 1000;
@@ -436,7 +436,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 			}
 			else if (keyPressed == VK_RIGHT && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
 				// right
-				AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 5000);
+				AkTimeMs seekTo = (AkTimeMs)((MemHelpers::SongTimer() * 1000) + 2500);
 				if (GetKeyState(VK_CONTROL) & 0x8000) seekTo += 10000;
 				WwiseVariables::Wwise_Sound_SeekOnEvent_Char_Int32(std::string("Play_" + MemHelpers::GetSongKey()).c_str(), 0x1234, seekTo, false);
 				MemHelpers::SetGreyNoteTimer(seekTo / 1000.f);
@@ -1119,7 +1119,7 @@ unsigned WINAPI MainThread() {
 	Midi::tuningOffset = Settings::GetModSetting("TuningOffset");
 	//AudioDevices::SetupMicrophones();
 	//BugPrevention::AllowComplexPasswords();
-	BugPrevention::PreventAdvancedDisplayCrash();
+	//BugPrevention::PreventAdvancedDisplayCrash();
 #ifdef _FIX_STORE
 	MemUtil::PatchAdr((void*)Offsets::steamApiUri, "%s://localhost:5154/api/requests/%d,%s,%s", 42); // Proxy available here: https://github.com/ffio1/SteamAPIProxy
 #endif
@@ -1153,6 +1153,7 @@ unsigned WINAPI MainThread() {
 
 		// Move Rocksmith to second monitor on boot (if specified)
 		if (!movedToExternalDisplay && Settings::ReturnSettingValue("SecondaryMonitor") == "on") {
+			Sleep(1000);
 			LaunchOnExternalMonitor::SendRocksmithToScreen(Settings::GetModSetting("SecondaryMonitorXPosition"), Settings::GetModSetting("SecondaryMonitorYPosition")); // Move to Location in INI
 			movedToExternalDisplay = true;
 		}
