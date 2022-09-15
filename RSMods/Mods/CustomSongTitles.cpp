@@ -10,7 +10,7 @@ std::vector<std::string> songTitles(6);
 /// </summary>
 void __declspec(naked) hook_fakeTitles() {
 	__asm {
-		mov ecx, dword ptr ds : [0x135CB7C] // Store the contents of 0x135CB7C into the ECX register. This is the line we are "replacing" to inject this hook.
+		mov ecx, dword ptr ds : [0x135FBFC]		// Store the contents of 0x135FBFC into the ECX register. This is the line we are "replacing" to inject this hook.
 		pushad // Save EAX, ECX, and EDX to the stack. 
 		mov ebx, 0x33 // Sets EBX to 0x33 / 51 / '3' in ASCII
 		add ebx, esi // Add Song List Index to EBX. One-Indexed

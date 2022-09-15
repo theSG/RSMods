@@ -53,6 +53,16 @@ void AutomatedToneChange(int command, std::string name, bool isapreset) {
 	if (isapreset) std::thread(ChangePresetTuning).detach();
 }
 
+void PatchTwoRTC()
+{
+	MemUtil::PatchAdr((LPVOID)Offsets::ptr_twoRTCBypass, (LPVOID)Offsets::ptr_twoRTCBypass_patch_call, 5);
+	MemUtil::PatchAdr((LPVOID)(Offsets::ptr_twoRTCBypass + 5), (LPVOID)Offsets::ptr_twoRTCBypass_patch_test, 2);
+	MemUtil::PatchAdr((LPVOID)(Offsets::ptr_twoRTCBypass + 7), (LPVOID)Offsets::ptr_twoRTCBypass_patch_jz, 2);
+	MemUtil::PatchAdr((LPVOID)(Offsets::ptr_twoRTCBypass + 9), (LPVOID)Offsets::ptr_twoRTCBypass_patch_mov, 5);
+	MemUtil::PatchAdr((LPVOID)(Offsets::ptr_twoRTCBypass + 14), (LPVOID)Offsets::ptr_twoRTCBypass_patch_lea, 6);
+	MemUtil::PatchAdr((LPVOID)(Offsets::ptr_twoRTCBypass + 20), (LPVOID)Offsets::ptr_twoRTCBypass_patch_call, 5);
+}
+
 /// <summary>
 /// Send Midi Data Async
 /// </summary>
@@ -757,7 +767,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 			if (currentVolumeIndex != 0) {
 				//MemHelpers::DX9DrawText("Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
 				realSongSpeed = RiffRepeater::GetSpeed(true);
-				MemHelpers::DX9DrawText(">>>: " + std::to_string((int)roundf(realSongSpeed))+ "  Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.2), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+				MemHelpers::DX9DrawText(">>>: " + std::to_string((int)roundf(realSongSpeed))+ "   Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.2), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
 				int notesHit = MemHelpers::GetNoteHits();
 				int notesMiss = MemHelpers::GetNoteMiss();
 				if (notesHit > 0 ) //don't draw in disconected //&& MemHelpers::IsInStringArray(MemHelpers::GetCurrentMenu(), learnASongModes)
@@ -1098,7 +1108,8 @@ unsigned WINAPI MainThread() {
 	// Initialize Functions
 	D3DHooks::debug = debug;
 	Offsets::Initialize();
-	*(char*)0x013aefd9 = (char)0x60; // Patches out function in Rocksmith.
+	char scrPatch[] = { 0xE0 };
+	MemUtil::PatchAdr((char*)0x0041C640, scrPatch, 1); // Patches out secret function in Rocksmith.
 	Settings::Initialize();
 	UpdateSettings();
 	ERMode::Initialize();
@@ -1119,17 +1130,17 @@ unsigned WINAPI MainThread() {
 		AudioDevices::ChangeOutputSampleRate();
 	}
 	
-	bool rs_asio_BypassTwoRTC = MemUtil::ReadPtr(Offsets::ptr_twoRTCBypass) == 0x12fe9;
+	bool rs_asio_BypassTwoRTC = MemUtil::ReadPtr(Offsets::ptr_twoRTCBypass) == 0x90909090;
 
 	std::cout << "RS_ASIO Bypass2RTC: " << std::boolalpha << rs_asio_BypassTwoRTC << std::endl;
 	if (Settings::ReturnSettingValue("BypassTwoRTCMessageBox") == "on")
-		MemUtil::PatchAdr((LPVOID)Offsets::ptr_twoRTCBypass, (LPVOID)Offsets::ptr_twoRTCBypass_patch, 6);
+		PatchTwoRTC();
 
 	if (Settings::ReturnSettingValue("LinearRiffRepeater") == "on")
 		RiffRepeater::EnableLinearSpeeds();
 
 //#ifdef _WWISE_LOGS // Only use in a debug environment. Will fill your log with spam!
-//	WwiseLogging::Setup_log_PostEvent();
+//	WwiseLogging::Setup_log_PostEvent(); //not tested
 	WwiseLogging::Setup_log_SetRTPCValue();
 //#endif
 
@@ -1162,11 +1173,11 @@ unsigned WINAPI MainThread() {
 			}
 
 			if (!rs_asio_BypassTwoRTC) { // If the patch was set by RS_ASIO, don't change it!
-				if (Settings::ReturnSettingValue("BypassTwoRTCMessageBox") == "off" && *(char*)Offsets::ptr_twoRTCBypass == Offsets::ptr_twoRTCBypass_patch[0]) // User originally had BypassTwoRTCMessageBox on, but now they want it turned off.
+				if (Settings::ReturnSettingValue("BypassTwoRTCMessageBox") == "off" && *(char*)Offsets::ptr_twoRTCBypass == Offsets::ptr_twoRTCBypass_patch_call[0]) // User originally had BypassTwoRTCMessageBox on, but now they want it turned off.
 					MemUtil::PatchAdr((LPVOID)Offsets::ptr_twoRTCBypass, (LPVOID)Offsets::ptr_twoRTCBypass_original, 6);
 
 				else if (Settings::ReturnSettingValue("BypassTwoRTCMessageBox") == "on" && *(char*)Offsets::ptr_twoRTCBypass == Offsets::ptr_twoRTCBypass_original[0]) // User originally had BypassTwoRTCMessageBox off, but now they want it turned on.
-					MemUtil::PatchAdr((LPVOID)Offsets::ptr_twoRTCBypass, (LPVOID)Offsets::ptr_twoRTCBypass_patch, 6);
+					PatchTwoRTC();
 			}
 
 			//if (MemHelpers::GetNonStopPlayTimer() != 2.0) MemHelpers::SetNonStopPlayTimer(2.0);
