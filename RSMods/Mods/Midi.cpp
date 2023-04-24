@@ -907,6 +907,8 @@ namespace Midi {
 
 			if (TrueTuning_Hertz < 260.f)
 				TrueTuning_Hertz *= 2;
+			if (TrueTuning_Hertz < 416.f)
+				TrueTuning_Hertz = 440;
 			if (TrueTuning_Hertz > 465.f)
 				TrueTuning_Hertz = 440;
 
@@ -918,6 +920,8 @@ namespace Midi {
 
 			if (TrueTuning_Hertz < 260.f)
 				TrueTuning_Hertz *= 2;
+			if (TrueTuning_Hertz < 416.f)
+				TrueTuning_Hertz = 440;
 			if (TrueTuning_Hertz > 465.f)
 				TrueTuning_Hertz = 440;
 

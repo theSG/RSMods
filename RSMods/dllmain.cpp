@@ -1153,7 +1153,7 @@ unsigned WINAPI MainThread() {
 
 		// Move Rocksmith to second monitor on boot (if specified)
 		if (!movedToExternalDisplay && Settings::ReturnSettingValue("SecondaryMonitor") == "on") {
-			Sleep(1000);
+			Sleep(2000);
 			LaunchOnExternalMonitor::SendRocksmithToScreen(Settings::GetModSetting("SecondaryMonitorXPosition"), Settings::GetModSetting("SecondaryMonitorYPosition")); // Move to Location in INI
 			movedToExternalDisplay = true;
 		}

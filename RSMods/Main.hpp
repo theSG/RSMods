@@ -79,17 +79,23 @@ inline std::vector<float> tuningInternalValue = {
 		{587.3295}, //B Standard
 		{622.2540}, //A# Standard
 		{659.2551}, //A Standard
+		{369.9944}, //G Standard
+		{391.9954}, //F# Standard
+		{415.3047}, //F Standard
 };
 
 inline std::vector<std::string> drawTuningName = {
-		{"E Standard"}, // (440.0000); //E
-		{"Eb Standard"}, // (466.1638); //Eb
-		{"D Standard"}, // (493.8833); //D
-		{"C# Standard"}, // (523.2511); //C#
-		{"C Standard"}, // (554.3653); //C
-		{"B Standard"}, // (587.3295); //B
-		{"A# Standard"}, // (622.2540); //A#
-		{"A Standard"}, // (659.2551); //A
+		{"Perfect unison (P1)"}, // (440.0000); //E
+		{"-1 Minor second (m2)"}, // (466.1638); //Eb
+		{"-2 Major second (M2)"}, // (493.8833); //D
+		{"-3 Minor third (m3)"}, // (523.2511); //C#
+		{"-4 Major third (M3)"}, // (554.3653); //C
+		{"-5 Perfect fourth (P4)"}, // (587.3295); //B
+		{"-6 Diminished fifth (d5)"}, // (622.2540); //A#
+		{"-7 Perfect fifth (P5)"}, // (659.2551); //A
+		{"+3 Minor third (m3)"}, // (369.9944); //G
+		{"+2 Major second (M2)"}, // (391.9954); //F#
+		{"+1 Minor second (m2)"}, // (415.3047); //F
 };
 
 inline std::string selectedUser = "";

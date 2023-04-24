@@ -467,6 +467,8 @@ void MemHelpers::ToggleLoft() {
 }
 
 float MemHelpers::SongTimer() {
+
+	//if (IsInStringArray(GetCurrentMenu(), preSongTuners)) {	return 0.f;	}
 	uintptr_t addrTimerBase = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timer, Offsets::ptr_timerBaseOffsets);
 	uintptr_t addrTimerRare = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_timerRare, Offsets::ptr_timerRareOffsets, true);
 
