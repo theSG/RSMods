@@ -368,6 +368,14 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
 				//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 				}
+			else if (keyPressed == 0x4E) { // n key
+			Midi::SendProgramChange(8, 0);
+			//std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
+				}
+			else if (keyPressed == 0x4D) { // m key
+			Midi::SendProgramChange(9, 0);
+			//std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
+				}
 
 			// wwise seek 
 			else if (keyPressed == 0x5A && MemHelpers::IsInStringArray(D3DHooks::currentMenu, learnASongModes) && !MemHelpers::IsInStringArray(D3DHooks::currentMenu, lasPauseMenus)) {
@@ -396,9 +404,9 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				{
 				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
 				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
-				if (GetAsyncKeyState(VK_SHIFT) < 0)
-					MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 7.5, sizeof(double));
-				else MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 2.5, sizeof(double));
+				if (GetAsyncKeyState(VK_CONTROL) < 0)
+					MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 8.0, sizeof(double));
+				else MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 3.0, sizeof(double));
 				}
 			else if (keyPressed == VK_F2)
 				{
@@ -581,7 +589,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		std::cout << "Init: theSG was here" << std::endl;
 
 		//tune guitar while game is loading
-		ShellExecuteA (NULL, "open", "C:\\Program Files\\Neural DSP\\Archetype Gojira\\Archetype Gojira.exe", NULL, "C:\\Program Files\\Neural DSP\\Archetype Gojira\\", SW_SHOW);
+		ShellExecuteA (NULL, "open", "C:\\Program Files\\Neural DSP\\Archetype Gojira.exe", NULL, "C:\\Program Files\\Neural DSP\\", SW_SHOW);
 
 		Settings::UpdateSettings();
 
@@ -1153,7 +1161,7 @@ unsigned WINAPI MainThread() {
 
 		// Move Rocksmith to second monitor on boot (if specified)
 		if (!movedToExternalDisplay && Settings::ReturnSettingValue("SecondaryMonitor") == "on") {
-			Sleep(2000);
+			Sleep(1500);
 			LaunchOnExternalMonitor::SendRocksmithToScreen(Settings::GetModSetting("SecondaryMonitorXPosition"), Settings::GetModSetting("SecondaryMonitorYPosition")); // Move to Location in INI
 			movedToExternalDisplay = true;
 		}
@@ -1417,7 +1425,7 @@ unsigned WINAPI MainThread() {
 			if (Settings::ReturnSettingValue("SkipSelection") == "on") {
 				if (MemHelpers::IsInStringArray(currentMenu, skipScreens)) Util::SendKey(VK_RETURN);
 				if (MemHelpers::IsInStringArray(previousMenu, learnASongSkipAfter) && currentMenu == "LearnASong_SongOptions") {
-					Sleep(1300);
+					Sleep(1500);
 					Util::SendKey(VK_ESCAPE);
 					Sleep(1000);
 					Util::SendKey(VK_DOWN);
