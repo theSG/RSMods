@@ -368,11 +368,11 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				if (MemHelpers::IsInSong()) std::thread(ChangePresetTuning).detach();
 				//std::cout << "Triggered Mod: Send PC via Keypress and Tune" << std::endl;
 				}
-			else if (keyPressed == 0x4E) { // n key
+			else if (keyPressed == 0x4E && MemHelpers::IsInSong()) { // n key
 			Midi::SendProgramChange(8, 0);
 			//std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
 				}
-			else if (keyPressed == 0x4D) { // m key
+			else if (keyPressed == 0x4D && MemHelpers::IsInSong()) { // m key
 			Midi::SendProgramChange(9, 0);
 			//std::cout << "Triggered Mod: Send PC via Keypress" << std::endl;
 				}
