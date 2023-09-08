@@ -513,6 +513,7 @@ namespace WwiseLogging {
 		if (!strcmp(rtpcName, "Amp_AT120_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
 		if (!strcmp(rtpcName, "Amp_GB50_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
 		if (!strcmp(rtpcName, "Amp_CA85_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
+		if (!strcmp(rtpcName, "Amp_CA100_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(5, "Lead"); //std::cout << "Lead" << std::endl;
 		if (!strcmp(rtpcName, "Amp_HG100_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
 		if (!strcmp(rtpcName, "Amp_TW40_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;
 		if (!strcmp(rtpcName, "Amp_EN30_Gain") && gameObject == 0xFFFFFFFF) AutomatedToneChange(3, "Clean"); //std::cout << "Clean" << std::endl;

@@ -37,7 +37,7 @@ unsigned WINAPI EnumerationThread() {
 }
 
 void ChangePresetTuning() {
-	std::this_thread::sleep_for(std::chrono::milliseconds(150)); //Waiting for preset to change
+	std::this_thread::sleep_for(std::chrono::milliseconds(160)); //Waiting for preset to change
 	Midi::AutomateTuningOnPreset();
 }
 
@@ -1081,7 +1081,7 @@ void UpdateSettings() { // Live updates from the INI
 /// Remove .mdmp dump files for when Rocksmith crashes. **ONLY EFFECTS DEBUG BUILDS**
 /// </summary>
 void ClearMDMPs() {
-	if (debug) { 
+//	if (debug) { 
 		bool didWeDeleteFiles = false;
 
 		std::filesystem::path rocksmithFolder = std::filesystem::current_path();
@@ -1095,7 +1095,7 @@ void ClearMDMPs() {
 
 		if (didWeDeleteFiles)
 			std::cout << "Deleting Useless Log Files" << std::endl;
-	}
+//	}
 }
 
 /// <summary>
@@ -1116,8 +1116,7 @@ unsigned WINAPI MainThread() {
 	// Initialize Functions
 	D3DHooks::debug = debug;
 	Offsets::Initialize();
-	char scrPatch[] = { 0xE0 };
-	MemUtil::PatchAdr((char*)0x0041C640, scrPatch, 1); // Patches out secret function in Rocksmith.
+	MemUtil::PatchAdr((char*)0x0041C640, "\xE0", 1); // Patches out secret function in Rocksmith.
 	Settings::Initialize();
 	UpdateSettings();
 	ERMode::Initialize();
