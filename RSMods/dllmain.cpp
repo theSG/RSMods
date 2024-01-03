@@ -405,8 +405,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
 				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
 				if (GetAsyncKeyState(VK_CONTROL) < 0)
-					MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 8.0, sizeof(double));
-				else MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 3.0, sizeof(double));
+					MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 9.333, sizeof(double));
+				else MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 3.333, sizeof(double));
 				}
 			else if (keyPressed == VK_F2)
 				{
@@ -589,7 +589,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		std::cout << "Init: theSG was here" << std::endl;
 
 		//tune guitar while game is loading
-		ShellExecuteA (NULL, "open", "C:\\Program Files\\Neural DSP\\Archetype Gojira.exe", NULL, "C:\\Program Files\\Neural DSP\\", SW_SHOW);
+		ShellExecuteA (NULL, "open", "C:\\Program Files\\Deskew Technologies\\Gig Performer 4\\GigPerformer4.exe", NULL, "C:\\Program Files\\Deskew Technologies\\Gig Performer 4", SW_SHOW);
 
 		Settings::UpdateSettings();
 
@@ -1160,7 +1160,7 @@ unsigned WINAPI MainThread() {
 
 		// Move Rocksmith to second monitor on boot (if specified)
 		if (!movedToExternalDisplay && Settings::ReturnSettingValue("SecondaryMonitor") == "on") {
-			Sleep(1500);
+			Sleep(2500);
 			LaunchOnExternalMonitor::SendRocksmithToScreen(Settings::GetModSetting("SecondaryMonitorXPosition"), Settings::GetModSetting("SecondaryMonitorYPosition")); // Move to Location in INI
 			movedToExternalDisplay = true;
 		}
