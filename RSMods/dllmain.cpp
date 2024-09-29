@@ -593,7 +593,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 		std::cout << "Init: theSG was here" << std::endl;
 
 		//tune guitar while game is loading
-		ShellExecuteA (NULL, "open", "C:\\Program Files\\Deskew Technologies\\Gig Performer 5\\GigPerformer5.exe", NULL, "C:\\Program Files\\Deskew Technologies\\Gig Performer 5", SW_SHOW);
+		ShellExecuteA (NULL, "open", "C:\\Program Files\\Gig Performer 5\\GigPerformer5.exe", NULL, "C:\\Program Files\\Gig Performer 5", SW_SHOW);
 
 		Settings::UpdateSettings();
 
