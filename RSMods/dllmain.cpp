@@ -92,6 +92,10 @@ unsigned WINAPI RiffRepeaterThread() {
 	while (!D3DHooks::GameClosing) {
 		Sleep(100);
 
+		if (Settings::ReturnSettingValue("RRSpeedAboveOneHundred") != "on")
+		{
+			continue;
+		}
 		const auto songKey = MemHelpers::GetSongKey();
 		if (songKey != previousSongKey) {
 			previousSongKey = songKey;
@@ -405,8 +409,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM keyPressed, LPARAM lParam) {
 				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedLTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
 				MemUtil::PatchAdr((BYTE*)Offsets::patch_scrollSpeedGTTarget, (UINT*)Offsets::patch_scrollSpeedChange, 3);
 				if (GetAsyncKeyState(VK_CONTROL) < 0)
-					MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 9.333, sizeof(double));
-				else MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 3.333, sizeof(double));
+					MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 3.3, sizeof(double));
+				else MemUtil::SetStaticValue(Offsets::ptr_scrollSpeedMultiplier, 9.0, sizeof(double));
 				}
 			else if (keyPressed == VK_F2)
 				{
@@ -775,13 +779,13 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 			if (currentVolumeIndex != 0) {
 				//MemHelpers::DX9DrawText("Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.1), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 4.5), (int)(WindowSize.height / 8), pDevice);
 				realSongSpeed = RiffRepeater::GetSpeed(true);
-				MemHelpers::DX9DrawText(">>>: " + std::to_string((int)roundf(realSongSpeed))+ "   Vol: " + std::to_string((int)volume), whiteText, (int)(WindowSize.width / 1.2), (int)(WindowSize.height / 1.05), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+				MemHelpers::DX9DrawText(">>>: " + std::to_string(static_cast<int>(roundf(realSongSpeed)))+ "   Vol: " + std::to_string(static_cast<int>(volume)), whiteText, static_cast<int>(WindowSize.width / 1.2), static_cast<int>(WindowSize.height / 1.05), static_cast<int>(WindowSize.width / 2.50), static_cast<int>(WindowSize.height / 8), pDevice);
 				int notesHit = MemHelpers::GetNoteHits();
 				int notesMiss = MemHelpers::GetNoteMiss();
 				if (notesHit > 0 ) //don't draw in disconected //&& MemHelpers::IsInStringArray(MemHelpers::GetCurrentMenu(), learnASongModes)
-					MemHelpers::DX9DrawText(std::to_string((float)notesHit / (notesHit + notesMiss) * 100.f).erase(5,3) + "%", whiteText,
-						(int)(WindowSize.width / 1.5), (int)(WindowSize.height / 1.049),
-						(int)(WindowSize.width / 1.225), (int)(WindowSize.height),
+					MemHelpers::DX9DrawText(std::to_string(static_cast<float>(notesHit) / (notesHit + notesMiss) * 100.f).erase(5,3) + "%", whiteText,
+						static_cast<int>(WindowSize.width / 1.5), static_cast<int>(WindowSize.height / 1.049),
+						static_cast<int>(WindowSize.width / 1.225), static_cast<int>(WindowSize.height),
 						pDevice, { NULL, NULL }, DT_RIGHT | DT_NOCLIP);
 				
 			}
@@ -804,7 +808,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 			minutes = (currentSongTime / 60) % 60;
 			hours = currentSongTime / 3600;
 			
-			MemHelpers::DX9DrawText(std::to_string(hours) + "h:" + std::to_string(minutes) + "m:" + std::to_string(seconds) + "s", whiteText, (int)(WindowSize.width / 1.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 1.45), (int)(WindowSize.height / 8), pDevice);
+			MemHelpers::DX9DrawText(std::to_string(hours) + "h:" + std::to_string(minutes) + "m:" + std::to_string(seconds) + "s", whiteText, static_cast<int>(WindowSize.width / 1.35), static_cast<int>(WindowSize.height / 30.85), static_cast<int>(WindowSize.width / 1.45), static_cast<int>(WindowSize.height / 8), pDevice);
 		}
 
 		//if ((Settings::ReturnSettingValue("RRSpeedAboveOneHundred") == "on" && RiffRepeater::loggedCurrentSongID && (MemHelpers::IsInStringArray(currentMenu, fastRRModes) || MemHelpers::IsInStringArray(currentMenu, scoreScreens))) || RiffRepeater::currentlyEnabled_Above100) { // Riff Repeater over 100%
@@ -837,7 +841,7 @@ HRESULT APIENTRY D3DHooks::Hook_EndScene(IDirect3DDevice9* pDevice) {
 
 		if (drawTone) {
 			const auto currentTime = std::chrono::steady_clock::now();
-			MemHelpers::DX9DrawText("Tone Change: " + drawToneName, whiteText, (int)(WindowSize.width / 2.35), (int)(WindowSize.height / 30.85), (int)(WindowSize.width / 2.50), (int)(WindowSize.height / 8), pDevice);
+			MemHelpers::DX9DrawText("MIDI Tone Switch: " + drawToneName, whiteText, static_cast<int>(WindowSize.width / 2.35), static_cast<int>(WindowSize.height / 30.85), static_cast<int>(WindowSize.width / 2.50), static_cast<int>(WindowSize.height / 8), pDevice);
 			if (currentTime - drawSomeStuffTime > std::chrono::seconds(5))	drawTone = false;
 		}
 

@@ -649,19 +649,42 @@ std::string MemHelpers::CurrentSelectedUser() {
 	return std::string((const char*)badValue);
 }
 
+bool IsSongKeyStringValid(const char* str, size_t max_len)
+{
+	if (!str)
+		return false;
+
+	size_t strLen = strlen(str);
+	if (strLen <= 13 || strLen > max_len)
+		return false;
+
+	std::string playPrefix = "Play_";
+	return strncmp(playPrefix.data(), str, sizeof(playPrefix));
+}
+
 /// <summary>
 /// Gets the SongKey of the current playing song, based on the initial preview.
 /// </summary>
 /// <returns>Last played Song Key</returns>
 std::string MemHelpers::GetSongKey() {
-	uintptr_t previewEvent = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_previewName, Offsets::ptr_previewNameOffsets);
+	uintptr_t previewEventPtr = MemUtil::FindDMAAddy(Offsets::baseHandle + Offsets::ptr_previewName, Offsets::ptr_previewNameOffsets);
 
-	if (previewEvent) {
-		std::string previewName = std::string((char*)previewEvent);
+	if (previewEventPtr) {
+		const char* previewEvent = (char*)previewEventPtr;
 
-		if (previewName.length() > 13 && previewName._Starts_with("Play_")) {
-			if (previewName.compare(previewName.length() - 9, 9, "_Preview") || previewName.compare(previewName.length() - 9, 9, "_Invalid")) {
-				lastSongKey = previewName.substr(5, previewName.length() - 13);
+		// Check if it's null terminated within a reasonable number of bytes
+		if (IsSongKeyStringValid(previewEvent, 50))
+		{
+			std::string previewName = std::string(previewEvent);
+
+			// If the preview name contains "Play_", which is required by Wwise.
+			if (previewName.length() > 13 && previewName._Starts_with("Play_")) {
+
+				// Verify that we are working with a "_Preview" audio.
+				// "_Invalid" is used when the user turns off their song previews.
+				if (previewName.compare(previewName.length() - 9, 9, "_Preview") || previewName.compare(previewName.length() - 9, 9, "_Invalid")) {
+					lastSongKey = previewName.substr(5, previewName.length() - 13);
+				}
 			}
 		}
 	}

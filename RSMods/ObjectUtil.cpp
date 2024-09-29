@@ -12,13 +12,20 @@ namespace ObjectUtil {
 
 		if (parent == nullptr) return children;
 
-		for (size_t i = 0; i < parent->childCount; i++)
+		// This could be a bad pointer even though it's not a nullptr.
+		try
 		{
-			if (parent->children[i] != nullptr) {
-				children.push_back(parent->children[i]);
+			for (size_t i = 0; i < parent->childCount; i++)
+			{
+				if (parent->children[i] != nullptr) {
+					children.push_back(parent->children[i]);
+				}
 			}
 		}
-
+		catch (const std::exception& e)
+		{
+			return children;
+		}
 		return children;
 	}
 
