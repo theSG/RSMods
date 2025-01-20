@@ -1471,7 +1471,12 @@ unsigned WINAPI MainThread() {
 			// Auto Load Profile. AKA "Fork in the toaster".
 			if (Settings::ReturnSettingValue("ForceProfileEnabled") == "on" && !(MemHelpers::IsInStringArray(currentMenu, dontAutoEnter)) && !forkInToasterNewProfile) {
 				// If the user user says "I want to always load this profile"
-				if (Settings::ReturnSettingValue("ProfileToLoad") != "" && currentMenu == (std::string)"ProfileSelect") {
+				// Skip UPlay login dialog - escape twice then enter
+				if (currentMenu == (std::string)"SelectionListDialog" || currentMenu == (std::string)"UplayLoginDialog") {
+					Util::SendKey(VK_ESCAPE);										
+					AutoEnterGame();
+				}
+				else if (Settings::ReturnSettingValue("ProfileToLoad") != "" && currentMenu == (std::string)"ProfileSelect") {
 					selectedUser = MemHelpers::CurrentSelectedUser();
 					if (selectedUser == Settings::ReturnSettingValue("ProfileToLoad")) // The profile we're looking for
 						AutoEnterGame();
@@ -1480,9 +1485,7 @@ unsigned WINAPI MainThread() {
 						forkInToasterNewProfile = true;
 					}
 					else { // Not the profile we're looking for. Move down 1.
-						PostMessage(FindWindow(NULL, L"Rocksmith 2014"), WM_KEYDOWN, VK_DOWN, 0);
-						Sleep(30);
-						PostMessage(FindWindow(NULL, L"Rocksmith 2014"), WM_KEYUP, VK_DOWN, 0);
+						Util::SendKey(VK_DOWN);
 					} 
 				}
 				else

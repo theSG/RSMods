@@ -165,7 +165,7 @@ inline std::vector<std::string> dontAutoEnter = { // Don't use the auto load las
 	"VideoPlayer", // Intro videos on how to calibrate, tune, play the game.
 	"FETuner", // First time tuning.
 	"FirstEncounter_Game", // Intro to game, teaches basic UI elements.
-	"SelectionListDialog", // Occasional Yes/ No Prompts.
+	//"SelectionListDialog", // Occasional Yes/ No Prompts.
 
 	// Played RS1 before
 	"RefresherSelect", // User has played Rocksmith before, but do they need some touchup on their knowledge.
@@ -174,7 +174,7 @@ inline std::vector<std::string> dontAutoEnter = { // Don't use the auto load las
 	"ImageDialog", // Disconnected Mode Pictures.
 
 	// Uplay section
-	"UplayLoginDialog", // User needs to login to uPlay.
+	//"UplayLoginDialog", // User needs to login to uPlay.
 	"UplayAccountCreationDialog" // User needs to create a uPlay account.
 };
 
